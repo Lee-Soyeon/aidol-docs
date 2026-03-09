@@ -7,6 +7,7 @@ on:
 jobs:
   create-meeting-note:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,9 +17,18 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Fetch transcript and create PR
+      - name: Wait for Fireflies processing
+        run: |
+          echo "⏳ Waiting 3 minutes for Fireflies to finish processing …"
+          sleep 180
+
+      - name: Fetch transcript, summarize, create PR
         env:
           FIREFLIES_API_KEY: ${{ secrets.FIREFLIES_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_PROVIDER: openai
+          OPENAI_MODEL: gpt-5.4
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MEETING_ID: ${{ github.event.client_payload.meeting_id }}
           MEETING_TITLE: ${{ github.event.client_payload.title }}
