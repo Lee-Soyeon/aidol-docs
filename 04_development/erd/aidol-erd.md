@@ -11,6 +11,7 @@ erDiagram
     aidols ||--o{ companions : "has members (casted)"
     aidols ||--o{ aidol_highlights : "owns"
     aidols ||--o{ aidol_leads : "has leads (logical reference)"
+    aidols ||--o{ aidol_feeds : "owns feed contents"
 
     aidol_highlights ||--|{ highlight_messages : "contains"
 
@@ -114,6 +115,16 @@ erDiagram
         int intimacy
         string nickname
     }
+
+    aidol_feeds {
+        string id PK
+        string aidol_id FK, NOT NULL, IX
+        string media_type "Enum: IMAGE, VIDEO"
+        string media_url
+        string thumbnail_url "NULLABLE, VIDEO 타입일 경우 필수"
+        datetime created_at
+        datetime updated_at
+    }
 ```
 
 ---
@@ -130,6 +141,7 @@ erDiagram
 | `companion_relationships` | 멤버 관계 설정    | 2      |
 | `chatrooms`               | 채팅방            | 3      |
 | `messages`                | 메시지            | 3      |
+| `aidol_feeds`             | 피드 콘텐츠       | 4      |
 
 ---
 
@@ -140,6 +152,7 @@ erDiagram
 | aidols → companions                   | 1:N (그룹당 여러 멤버)                    |
 | aidols → aidol_highlights             | 1:N (그룹당 여러 하이라이트)              |
 | aidols → aidol_leads                  | 1:N (그룹당 여러 viewer, DB FK는 없음)    |
+| aidols → aidol_feeds                  | 1:N (그룹당 여러 피드)                    |
 | aidol_highlights → highlight_messages | 1:N (하이라이트당 여러 하이라이트 메세지) |
 | companions → highlight_messages       | 1:N (멤버당 여러 하이라이트 메세지)       |
 | companions → chatrooms                | 1:N (멤버당 여러 채팅방)                  |
@@ -245,3 +258,18 @@ erDiagram
 | content      | text    | NOT NULL         | 메시지 내용                                   |
 | anonymous_id | str(36) |                  | 익명 사용자 식별자 (쿠키: aioia_anonymous_id) |
 | companion_id | UUID    | IX               | 이전 대화를 불러오기 위한 companion 식별자    |
+
+### aidol_feeds
+
+| 필드          | 타입     | 제약             | 설명                           |
+| ------------- | -------- | ---------------- | ------------------------------ |
+| id            | UUID     | PK               | 자동 생성                      |
+| aidol_id      | UUID     | FK, IX, NOT NULL | aidols 참조                    |
+| media_type    | str      | NOT NULL         | "IMAGE" \| "VIDEO"             |
+| media_url     | str      | NOT NULL         | 미디어 URL                     |
+| thumbnail_url | str      |                  | 썸네일 URL (VIDEO일 경우 필수) |
+| created_at    | datetime | NOT NULL         | 생성 시간                      |
+| updated_at    | datetime | NOT NULL         | 수정 시간                      |
+
+인덱스
+  - `ix_aidol_feeds_aidol_created_id_desc` (`aidol_id`, `created_at` DESC, `id` DESC)
