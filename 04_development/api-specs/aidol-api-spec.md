@@ -24,6 +24,7 @@
 | `/leads`                                            | POST   | email 수집               | Public | 1      |
 | `/aidol-highlights`                                 | GET    | 아이돌 하이라이트 조회   | Public | 2      |
 | `/aidol-highlights/{id}/messages`                   | GET    | 하이라이트 메세지 조회   | Public | 2      |
+| `/aidol-feeds`                                      | GET    | 피드 콘텐츠 목록 조회    | Public | 4      |
 | `/companion-relationships`                          | GET    | 아이돌 관계 조회         | Public | 2      |
 | `/companion-relationships/{id}`                     | GET    | 아이돌 관계 조회         | Public | 2      |
 | `/companion-relationships`                          | POST   | 아이돌 관계성 생성       | Public | 2      |
@@ -626,6 +627,38 @@ Query Parameters (공통 List 규칙)
 
 ---
 
+ ### GET /aidol-feeds - 피드 콘텐츠 목록 조회
+
+  AIdol 피드 콘텐츠를 조회합니다. (MyGroup 피드 탭, OtherGroup 피드 탭)
+
+  - URL: GET /aidol-feeds
+  - Auth: 공개
+
+  Query Parameters (공통 List 규칙)
+
+  - `current`, `pageSize`, `sort`, `filters`
+  - 대표 `filters` 예시: `[{"field":"aidolId","operator":"eq","value":"aidol-uuid..."}]`
+
+  **Response** (200 OK):
+
+  ```json
+  {
+    "data": [
+      {
+        "id": "string",
+        "aidolId": "string",
+        "mediaType": "IMAGE | VIDEO",
+        "mediaUrl": "string",
+        "thumbnailUrl": "string | null",
+        "createdAt": "string (ISO 8601)",
+        "updatedAt": "string (ISO 8601)"
+      }
+    ],
+    "total": 1
+  }
+```
+
+---
 ### GET /companion-relationships -멤버 관계 조회
 
 멤버 관계 정보를 조회합니다.
@@ -1029,6 +1062,19 @@ URL: POST /chatrooms/{id}/companions/{cid}/initial-response
 }
 
 ```
+### AIdolFeed
+
+  ```tsx
+  {
+    id: string                         // UUID
+    aidolId: string                    // 그룹 ID
+    mediaType: "IMAGE" | "VIDEO"       // 콘텐츠 유형
+    mediaUrl: string                   // 이미지/영상 URL
+    thumbnailUrl: string | null        // 영상 썸네일 URL
+    createdAt: string                  // ISO 8601 datetime
+    updatedAt: string                  // ISO 8601 datetime
+  }
+```
 
 ### CompanionRelationships
 
@@ -1095,6 +1141,7 @@ URL: POST /chatrooms/{id}/companions/{cid}/initial-response
 - `GET /companions`
 - `GET /aidol-highlights`
 - `GET /companion-relationships`
+- `GET /aidol-feeds`
 
 비적용 endpoint:
 
