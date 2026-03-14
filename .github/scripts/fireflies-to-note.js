@@ -55,6 +55,12 @@ function httpsPost(hostname, path, headers, body) {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+function getOpenAITokenLimitParams(model) {
+  return /^gpt-5(?:[.-]|$)/i.test(model)
+    ? { max_completion_tokens: LLM_MAX_TOKENS }
+    : { max_tokens: LLM_MAX_TOKENS };
+}
+
 // ─── Fireflies GraphQL (with retry) ────────────────────────────
 async function getTranscript(meetingId, maxRetries = 6) {
   const query = `
@@ -160,7 +166,7 @@ async function summarizeWithOpenAI(transcript) {
     },
     {
       model: OPENAI_MODEL,
-      max_tokens: LLM_MAX_TOKENS,
+      ...getOpenAITokenLimitParams(OPENAI_MODEL),
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
