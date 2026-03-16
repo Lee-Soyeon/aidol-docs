@@ -5,3 +5,8 @@
 .obsidian/
 *.md:Zone.Identifier
 *:Zone.Identifier
+
+# auto-generated
+__pycache__/
+*.pyc
+install.cmd

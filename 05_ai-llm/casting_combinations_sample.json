@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "description": "캐스팅 이미지 가변 블록 조합 샘플 (실험용)",
+    "source": "04-ai-idol-guide.md (제이 발표)",
+    "variable_blocks": "prompts/casting_variable_blocks.json",
+    "system_prompt": "prompts/casting_image_prompt.py"
+  },
+
+  "combinations": [
+    {
+      "id": "A1",
+      "name": "BOY A — 시크 / 날카로운 / 블랙 숏컷",
+      "gender": "남자",
+      "ethnicity": "동아시아",
+      "mood": "시크",
+      "impression": "날카로운",
+      "hairstyle": "블랙 숏컷",
+      "note": "BOY A TYPE — 쿨 강렬"
+    },
+    {
+      "id": "A2",
+      "name": "BOY A — 청량 / 세련된 / 브라운 미디엄",
+      "gender": "남자",
+      "ethnicity": "동아시아",
+      "mood": "청량",
+      "impression": "세련된",
+      "hairstyle": "브라운 미디엄",
+      "note": "BOY A TYPE — 청순 계열"
+    },
+    {
+      "id": "A3",
+      "name": "BOY A — 시크 / 날카로운 / 애쉬그레이",
+      "gender": "남자",
+      "ethnicity": "동아시아",
+      "mood": "시크",
+      "impression": "날카로운",
+      "hairstyle": "애쉬그레이 미디엄",
+      "note": "BOY A TYPE — 컬러 변주"
+    },
+    {
+      "id": "B1",
+      "name": "BOY B — 청량 / 부드러운 / 블랙 롱",
+      "gender": "남자",
+      "ethnicity": "동아시아",
+      "mood": "청량",
+      "impression": "부드러운",
+      "hairstyle": "블랙 롱",
+      "note": "BOY B TYPE — 롱헤어"
+    },
+    {
+      "id": "B2",
+      "name": "BOY B — 청량 / 세련된 / 다크브라운 웨이브",
+      "gender": "남자",
+      "ethnicity": "동아시아",
+      "mood": "청량",
+      "impression": "세련된",
+      "hairstyle": "다크브라운 웨이브",
+      "note": "BOY B TYPE — 웨이브 변주"
+    },
+    {
+      "id": "C1",
+      "name": "BOY C — 중성적 / 요정 / 블랙 머쉬룸",
+      "gender": "남자",
+      "ethnicity": "동아시아",
+      "mood": "중성적",
+      "impression": "요정",
+      "hairstyle": "블랙 머쉬룸",
+      "note": "BOY C TYPE — 중성적"
+    },
+    {
+      "id": "C2",
+      "name": "BOY C — 중성적 / 동글동글 / 브라운 미디엄",
+      "gender": "남자",
+      "ethnicity": "동아시아",
+      "mood": "중성적",
+      "impression": "동글동글",
+      "hairstyle": "브라운 미디엄",
+      "note": "BOY C TYPE — 귀여운 중성"
+    },
+    {
+      "id": "D1",
+      "name": "BOY D — 청량 / 부드러운 / 다크브라운 웨이브",
+      "gender": "남자",
+      "ethnicity": "동아시아",
+      "mood": "청량",
+      "impression": "부드러운",
+      "hairstyle": "다크브라운 웨이브",
+      "note": "BOY D TYPE — 부드러운"
+    },
+    {
+      "id": "G1",
+      "name": "GIRL — 걸크러시 / 강한 눈매 / 블론드 롱",
+      "gender": "여자",
+      "ethnicity": "동아시아",
+      "mood": "걸크러시",
+      "impression": "강한 눈매",
+      "hairstyle": "블론드 롱",
+      "note": "걸그룹 걸크러시"
+    },
+    {
+      "id": "G2",
+      "name": "GIRL — 청순 / 부드러운 / 블랙 롱",
+      "gender": "여자",
+      "ethnicity": "동아시아",
+      "mood": "청순",
+      "impression": "부드러운",
+      "hairstyle": "블랙 롱",
+      "note": "걸그룹 청순"
+    },
+    {
+      "id": "G3",
+      "name": "GIRL — 큐트 / 동글동글 / 핑크 밥컷",
+      "gender": "여자",
+      "ethnicity": "동아시아",
+      "mood": "큐트",
+      "impression": "동글동글",
+      "hairstyle": "핑크 밥컷",
+      "note": "걸그룹 큐트"
+    },
+    {
+      "id": "G4",
+      "name": "GIRL — 시크 / 날카로운 / 블랙 롱",
+      "gender": "여자",
+      "ethnicity": "동아시아",
+      "mood": "시크",
+      "impression": "날카로운",
+      "hairstyle": "블랙 롱",
+      "note": "걸그룹 시크 비주얼"
+    },
+    {
+      "id": "G5",
+      "name": "GIRL — 청량 / 세련된 / 블랙 하이포니",
+      "gender": "여자",
+      "ethnicity": "동아시아",
+      "mood": "청량",
+      "impression": "세련된",
+      "hairstyle": "블랙 하이포니",
+      "note": "걸그룹 활발한 비주얼"
+    },
+    {
+      "id": "MIX1",
+      "name": "BOY MIX — 다크 / 묵직한 / 실버 숏컷 (혼혈)",
+      "gender": "남자",
+      "ethnicity": "혼혈",
+      "mood": "다크",
+      "impression": "묵직한",
+      "hairstyle": "실버 숏컷",
+      "note": "인종 다양성 — 혼혈 남성"
+    },
+    {
+      "id": "MIX2",
+      "name": "GIRL MIX — 걸크러시 / 강한 눈매 / 블랙 롱 (동남아)",
+      "gender": "여자",
+      "ethnicity": "동남아시아",
+      "mood": "걸크러시",
+      "impression": "강한 눈매",
+      "hairstyle": "블랙 롱",
+      "note": "인종 다양성 — 동남아 여성"
+    },
+    {
+      "id": "MIX3",
+      "name": "BOY MIX — 청량 / 세련된 / 브라운 미디엄 (유럽)",
+      "gender": "남자",
+      "ethnicity": "유럽",
+      "mood": "청량",
+      "impression": "세련된",
+      "hairstyle": "브라운 미디엄",
+      "note": "인종 다양성 — 유럽 남성"
+    },
+    {
+      "id": "MIX4",
+      "name": "BOY MIX — 시크 / 날카로운 / 블랙 숏컷 (남미)",
+      "gender": "남자",
+      "ethnicity": "남미",
+      "mood": "시크",
+      "impression": "날카로운",
+      "hairstyle": "블랙 숏컷",
+      "note": "인종 다양성 — 남미 남성"
+    }
+  ]
+}
