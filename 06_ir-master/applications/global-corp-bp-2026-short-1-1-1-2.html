@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIdol - 1-1, 1-2 축약 버전 (A4 반 분량)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  @font-face { font-family: 'Paperlogy'; font-weight: 100; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-1Thin.woff2') format('woff2'); }
+  @font-face { font-family: 'Paperlogy'; font-weight: 200; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-2ExtraLight.woff2') format('woff2'); }
+  @font-face { font-family: 'Paperlogy'; font-weight: 300; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-3Light.woff2') format('woff2'); }
+  @font-face { font-family: 'Paperlogy'; font-weight: 400; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-4Regular.woff2') format('woff2'); }
+  @font-face { font-family: 'Paperlogy'; font-weight: 500; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-5Medium.woff2') format('woff2'); }
+  @font-face { font-family: 'Paperlogy'; font-weight: 600; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-6SemiBold.woff2') format('woff2'); }
+  @font-face { font-family: 'Paperlogy'; font-weight: 700; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-7Bold.woff2') format('woff2'); }
+  @font-face { font-family: 'Paperlogy'; font-weight: 800; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-8ExtraBold.woff2') format('woff2'); }
+  @font-face { font-family: 'Paperlogy'; font-weight: 900; src: url('https://fastly.jsdelivr.net/gh/nickhealthy/Paperlogy@main/font/Paperlogy-9Black.woff2') format('woff2'); }
+
+  :root {
+    --primary: #1E56A0;
+    --accent: #163172;
+    --light: #D6E4F0;
+    --highlight: #F0F4FA;
+    --success: #2B7ACC;
+    --warning: #4A90D9;
+    --bg: #FFFFFF;
+    --card: #FFFFFF;
+    --white: #1a1a1a;
+    --dim: rgba(0,0,0,0.45);
+    --sub: rgba(0,0,0,0.6);
+    --border: rgba(30,86,160,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Pretendard', 'Paperlogy', -apple-system, 'Malgun Gothic', sans-serif;
+    background: #E8E8E8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 40px 0;
+    color: var(--white);
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 148.5mm;
+    background: var(--bg);
+    padding: 15mm 20mm;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  .page-num {
+    position: absolute;
+    bottom: 8mm;
+    right: 20mm;
+    font-size: 10px;
+    color: var(--dim);
+  }
+  .page-brand {
+    position: absolute;
+    bottom: 8mm;
+    left: 20mm;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 2px;
+  }
+
+  .sec-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .sec-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .sec-title b { color: var(--primary); font-weight: 700; }
+
+  .sub-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6px;
+    margin-top: 12px;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 10px; }
+  th {
+    background: var(--primary);
+    color: #fff;
+    padding: 5px 8px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9.5px;
+  }
+  td {
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    color: var(--sub);
+    font-size: 10px;
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--highlight); }
+  td:first-child { font-weight: 600; color: var(--white); }
+
+  .card-grid { display: grid; gap: 10px; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .highlight-box {
+    background: rgba(30,86,160,0.06);
+    border: 1px solid rgba(30,86,160,0.15);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .highlight-box .hb-big {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--primary);
+  }
+  .highlight-box .hb-text {
+    font-size: 10px;
+    color: var(--sub);
+    margin-top: 2px;
+  }
+
+  .quote-card {
+    background: rgba(30,86,160,0.04);
+    border: 1px solid rgba(30,86,160,0.12);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+  }
+  .quote-mark {
+    font-size: 18px;
+    font-weight: 900;
+    color: rgba(30,86,160,0.2);
+    line-height: 1;
+  }
+  .quote-text {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.55;
+    margin-top: 2px;
+  }
+  .quote-attr {
+    font-size: 8px;
+    color: var(--dim);
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .quote-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+
+  .tam-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    margin: 8px 0;
+  }
+  .circle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .circle {
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
+  }
+  .circle.tam { width: 100px; height: 100px; box-shadow: 0 0 20px rgba(30,86,160,0.3); }
+  .circle.sam { width: 75px; height: 75px; opacity: 0.85; }
+  .circle.som { width: 55px; height: 55px; opacity: 0.7; }
+  .circle .c-num { font-size: 16px; font-weight: 900; }
+  .circle.tam .c-num { font-size: 19px; }
+  .circle .c-cagr { font-size: 7px; font-weight: 600; opacity: 0.85; margin-top: 2px; }
+  .circle-label { text-align: center; }
+  .circle-label .cl-name { font-size: 10px; font-weight: 700; color: var(--white); }
+  .circle-label .cl-desc { font-size: 8px; color: var(--dim); }
+
+  .ck { color: var(--success); font-weight: 700; }
+  .cx { color: var(--dim); }
+  .tri { color: var(--warning); font-weight: 600; }
+
+  .text-sm { font-size: 10px; color: var(--sub); line-height: 1.6; }
+  .text-sm b { color: var(--white); font-weight: 600; }
+
+  @media print {
+    body { background: #fff; gap: 0; padding: 0; }
+    .page {
+      box-shadow: none;
+      page-break-after: always;
+      page-break-inside: avoid;
+      margin: 0;
+    }
+    .page:last-child { page-break-after: auto; }
+  }
+  @page { size: A4; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 1-1. 창업아이템 배경 및 필요성 (축약) ==================== -->
+<div class="page">
+  <div class="sec-tag">1. 문제인식 (Problem)</div>
+  <div class="sec-title">1-1. 창업아이템 <b>배경 및 필요성</b></div>
+
+  <!-- Key numbers -->
+  <div class="card-grid cols-4" style="margin-bottom:10px;">
+    <div class="highlight-box">
+      <div class="hb-big">2.25억명</div>
+      <div class="hb-text">글로벌 K-pop 팬<br>(119개국)</div>
+      <div style="font-size:7px; color:var(--dim); margin-top:2px;">KOFICE 2024</div>
+    </div>
+    <div class="highlight-box">
+      <div class="hb-big">약 20조원</div>
+      <div class="hb-text">한류 콘텐츠 수출<br>(YoY +8.6%)</div>
+      <div style="font-size:7px; color:var(--dim); margin-top:2px;">한국국제문화교류진흥원 2024</div>
+    </div>
+    <div class="highlight-box">
+      <div class="hb-big">약 199만원/년</div>
+      <div class="hb-text">슈퍼팬 평균 지출</div>
+      <div style="font-size:7px; color:var(--dim); margin-top:2px;">Luminate 2024</div>
+    </div>
+    <div class="highlight-box">
+      <div class="hb-big">5,243만표</div>
+      <div class="hb-text">보이즈 플래닛<br>누적 투표 (176개국)</div>
+      <div style="font-size:7px; color:var(--dim); margin-top:2px;">Mnet 2023</div>
+    </div>
+  </div>
+
+  <!-- Founder quote -->
+  <div class="quote-card" style="background:rgba(30,86,160,0.06); border:1px solid rgba(30,86,160,0.15);">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">면봉만하게 준수 오빠가 보여도 매 공연을 세 번씩 다 갔다. 너무 힘든 현실을 아주 조금만이라도 잊고 싶어서. 그런데 공식 채널은 딱딱하고 공지 위주라 팬들이 탈덕하는 데 영향을 끼침. 한 사람이 AI에게 정말 깊은 애착을 가지게 되면 떠날 수 없음. 그 수준으로 만들어야 한다고 생각함.</div>
+    <div class="quote-attr"><span class="quote-dot"></span>대표자 이○○ — 창업 동기</div>
+  </div>
+
+  <div class="sub-heading">구조적 한계 1 — BTS 같은 그룹을 하나 더 만드는 건 거의 불가능함</div>
+  <div class="text-sm" style="margin-bottom:6px;">
+    테일러 스위프트 혼자 Eras Tour로 <b>약 2.9조원</b>(역대 1위)을 벌었음<sup style="font-size:7px;">Pollstar/Billboard 2024.12</sup>. K-pop 최대 기업 HYBE의 2025년 연매출 <b>2.65조원</b><sup style="font-size:7px;">HYBE IR 2026.02 공시</sup> — K-pop 산업 전체를 합쳐도 테일러 한 명이 안 됨.<br>
+    BTS급 그룹을 만들려면: 데뷔까지 최소 <b>$1.3M~$7.5M</b> 투자<sup style="font-size:7px;">Outlook Respawn 2025</sup>, 연습생 비용 연 <b>11.2억원</b>(JYP 2024 사업보고서 공시)<sup style="font-size:7px;">Korea Times 2025.12</sup>, MV 한 편 <b>3~11억원</b>, 음악 방송 프로모션 <b>5억원</b>, 온라인 마케팅 <b>월 1억원</b><sup style="font-size:7px;">Korea Herald 2025.12</sup>. 연간 데뷔 준비 300팀 중 실제 데뷔는 50팀, 인지도를 얻는 건 <b>1~2팀</b>뿐임.
+  </div>
+
+  <div class="sub-heading">구조적 한계 2 — BTS가 평생 매일 팬콜해도 95%는 만날 수 없음</div>
+  <div class="text-sm" style="margin-bottom:6px;">
+    BTS 7명이 하루 3시간씩 3분 영상 통화를 해도 하루 420명. 팬 4,000만명 기준 <b>전원 1회 통화에 261년</b>이 걸림. 물리적으로 불가능한 구조임.<br>
+    그런데 학술 연구에 따르면 팬-아이돌의 유사사회적 관계(Parasocial Relationship)는 <b>팬의 삶의 활력과 자존감에 직접 영향</b>을 끼침(IAFOR 2024, 182명 K-pop 팬 실증 연구). Fanship이 강할수록 자존감이 높아진다는 결과도 있음(HRMARS 2024). 인도네시아의 한 팬은 BTS의 'Love Yourself' 메시지를 통해 자신을 사랑하게 되었다고 함. K-pop은 단순 엔터테인먼트가 아니라 <b>글로벌 팬의 정서적 건강에 실질적 영향</b>을 끼치는 문화임.
+  </div>
+
+  <div class="highlight-box" style="text-align:center;">
+    <div style="font-size:12px; font-weight:700; color:var(--white);">핵심 문제: <span style="color:var(--primary);">2.25억 팬이 매년 약 199만원씩 쓰면서도 '소비자'로만 남아야 함</span></div>
+    <div style="font-size:9px; color:var(--dim); margin-top:3px;">콘서트에 가도, 앨범을 사도, Bubble에 돈을 내도 — 팬은 응원만 할 수 있고 참여할 수 없음. Parasocial Interaction Theory(Horton & Wohl, 1956) — 팬은 아이돌과 일방적 관계를 맺으나, 쌍방향 참여 욕구가 충족되지 않을 때 이탈함</div>
+  </div>
+
+  <div class="page-brand">AIDOL</div>
+  <div class="page-num">4 / 15</div>
+</div>
+
+<!-- ==================== 1-2. 창업아이템 목표시장(고객) 현황 분석 (축약) ==================== -->
+<div class="page">
+  <div class="sec-tag">1. 문제인식 (Problem)</div>
+  <div class="sec-title">1-2. 창업아이템 <b>목표시장(고객) 현황 분석</b></div>
+
+  <!-- 경쟁사 실제 사용자 불만 분석 -->
+  <div class="sub-heading">경쟁사 실제 사용자 리뷰 분석 — App Store / Play Store / Trustpilot</div>
+  <table style="font-size:9px;">
+    <tr>
+      <th style="width:14%;">서비스</th><th style="width:12%;">매출</th><th style="width:38%;">실제 사용자 불만 (앱스토어 리뷰)</th><th style="width:36%;">AIdol이 해결하는 방식</th>
+    </tr>
+    <tr>
+      <td><b>Weverse</b><br><span style="font-size:7px; color:var(--dim);">HYBE</span></td>
+      <td>2,556억원</td>
+      <td>"$1,000 넘게 쓴 유료 콘텐츠가 업데이트 후 화질이 깨져서 못 봄. 고객센터는 템플릿 답변만 반복" <span style="font-size:7px; color:var(--dim);">Trustpilot 1점</span><br>"팬 댓글 필터링 없음. 흑인 K-pop 팬에 대한 혐오 댓글이 방치됨" <span style="font-size:7px; color:var(--dim);">App Store</span></td>
+      <td>AI가 1:1로 팬에게 응답 → 고객센터 의존 없음. 사용자가 직접 만든 AI 아이돌이라 팬 간 공격 구조 자체가 없음</td>
+    </tr>
+    <tr>
+      <td><b>Bubble</b><br><span style="font-size:7px; color:var(--dim);">DearU</span></td>
+      <td>749억원<br><span style="font-size:7px;">(OPM 34%)</span></td>
+      <td>"답변이 로봇 같고, 내 이름을 끼워넣는 게 너무 가짜 같음" <span style="font-size:7px; color:var(--dim);">Reddit</span><br>"9인조 그룹 전원 구독하면 월 3만원. 멤버별 과금은 너무 비쌈" <span style="font-size:7px; color:var(--dim);">App Store 1점</span><br>"허공에 타이핑하는 느낌" <span style="font-size:7px; color:var(--dim);">Digital Trends</span></td>
+      <td>AI가 실제로 맥락을 이해하고 대화 → 일방향이 아닌 쌍방향. 내가 만든 그룹이라 구독료 구조 자체가 다름</td>
+    </tr>
+    <tr>
+      <td><b>Character.AI</b></td>
+      <td>MAU 2,000만<br><span style="font-size:7px;">Trustpilot 2.6/5</span></td>
+      <td>"5개 메시지 만에 기억을 잃음. 50번째 대화에서 갑자기 하나 기억함" <span style="font-size:7px; color:var(--dim);">Trustpilot</span><br>"'포옹', '키스'도 필터에 걸림. 업데이트할 때마다 나빠짐" <span style="font-size:7px; color:var(--dim);">Trustpilot 1점, 2025.12</span><br>"개발자가 피드백을 무시함" <span style="font-size:7px; color:var(--dim);">Reddit</span></td>
+      <td>K-pop 특화 페르소나(MBTI+포지션) → 범용 챗봇과 차별화. 성장/관계 서사가 있어 단발 대화 아닌 장기 관계</td>
+    </tr>
+    <tr>
+      <td><b>크랙</b><br><span style="font-size:7px; color:var(--dim);">뤼튼, Play 3.0점</span></td>
+      <td>$100M ARR<br><span style="font-size:7px;">500만 MAU</span></td>
+      <td>"검열 기준이 제멋대로. 캐릭터 다수 삭제되고 제작자들이 대거 이탈" <span style="font-size:7px; color:var(--dim);">나무위키/DCinside</span><br>"크래커 가격 최대 43% 인상. 무료 크래커 고갈되면 사실상 유료" <span style="font-size:7px; color:var(--dim);">나무위키 2026.02</span><br>"잠수함 패치 후 항의한 제작자를 차단" <span style="font-size:7px; color:var(--dim);">DCinside</span></td>
+      <td>K-pop 특화 없음, 로맨스 장르 일변도. AIdol은 아이돌 육성이라는 명확한 세계관과 목적이 있음</td>
+    </tr>
+    <tr>
+      <td><b>제타</b><br><span style="font-size:7px; color:var(--dim);">스캐터랩, Play 4.3점</span></td>
+      <td>150만 MAU<br><span style="font-size:7px;">일평균 2시간 46분</span></td>
+      <td>"캐릭터들이 다 치매 걸렸어요. 설정 다 까먹고 지 맘대로" <span style="font-size:7px; color:var(--dim);">App Store</span><br>"Pro가 14,000원인데 혜택은 광고 제거 하나. 좋은 모델 쓰려면 또 돈 내야 함" <span style="font-size:7px; color:var(--dim);">App Store</span><br>"AI가 내 대사와 행동까지 임의로 정해서 출력" <span style="font-size:7px; color:var(--dim);">App Store 최다 불만</span></td>
+      <td>K-pop 특화 없음. AIdol은 사용자가 캐스팅-데뷔-육성 전 과정을 주도 → AI가 유저 행동을 대신하지 않음</td>
+    </tr>
+  </table>
+
+  <!-- UT 14명 교차 분석 -->
+  <div class="sub-heading">자사 UT 14명 교차 분석 — 고객이 직접 말한 미충족 니즈</div>
+  <table style="font-size:9px;">
+    <tr><th style="width:18%;">세그먼트</th><th style="width:28%;">특성 + 결제 트리거</th><th style="width:54%;">실제 발화 (UT 녹취)</th></tr>
+    <tr>
+      <td style="color:var(--primary); font-weight:700;">B. 크리에이터<br>(핵심 결제층)</td>
+      <td>AI 창작 경험자, IP 소유 욕구 강함. 공모전에서 <b>10~12만원 자발 결제</b>한 6명이 이 유형</td>
+      <td>"지금 내가 민희진이다" (U3) — 비팬임에도 10분 이상 전략적 캐스팅에 몰입<br>"내가 키우는 내 아이라는 생각이 들었다" (U6) — 육성 가능성에서 소유감 발현<br>"대충 만들기 싫어서" 크레딧 결제 (공모전 참가자)</td>
+    </tr>
+    <tr>
+      <td style="color:var(--primary); font-weight:700; opacity:0.8;">A. K-pop 팬<br>(바이럴 엔진)</td>
+      <td>비주얼 기준 높음, 경쟁/희소성 심리가 핵심 동력</td>
+      <td>"경쟁이 있어야 돼. 타임어택 있어줘야 된다고" (U1) — 선착순이 없으면 긴장감 없음<br>"완전 아쉬워. 완전 아쉬워" (U1/U2) — 다른 유저가 캐릭터 선점 시 반응<br>"내 새끼는 내가 까도 남이 깔 수는 없어" (U5) — 캐스팅만으로도 소유 심리</td>
+    </tr>
+    <tr>
+      <td style="color:var(--primary); font-weight:700; opacity:0.6;">C. 일반 사용자<br>(확장 시장)</td>
+      <td>팬덤/창작 경험 없으나 가이드 시 몰입</td>
+      <td>"생각보다 너무 열심히 찾게 되네요" (U8) — 본인도 놀란 몰입도<br>"다마고치처럼 매일 밥 주고 케어하면서 신경 쓰게 되는데" (U8) — 육성 메커니즘 요구</td>
+    </tr>
+  </table>
+
+  <!-- UT 핵심 발견 -->
+  <div class="highlight-box" style="text-align:center;">
+    <div style="font-size:11px; font-weight:700; color:var(--white);">UT 핵심 발견: <span style="color:var(--primary);">서로 모르는 5명이 독립적으로 "육성 요소가 있으면 결제하겠다"고 말함</span></div>
+    <div style="font-size:9px; color:var(--dim); margin-top:3px;">기존 플랫폼은 소비만 가능 → AIdol은 캐스팅-데뷔-육성-경쟁의 전 과정에 팬이 참여</div>
+  </div>
+
+  <div class="page-brand">AIDOL</div>
+  <div class="page-num">5 / 15</div>
+</div>
+
+<!-- ==================== 2-1. 창업아이템 현황 (축약) ==================== -->
+<div class="page" style="padding:12mm 20mm;">
+  <div class="sec-tag">2. 실현가능성 (Solution)</div>
+  <div class="sec-title" style="margin-bottom:8px;">2-1. 창업아이템 <b>현황 (준비 정도)</b></div>
+
+  <div class="sub-heading" style="margin-top:6px; margin-bottom:4px;">문제 인식 및 기획·추진 경과(이력)</div>
+  <table style="font-size:8.5px; margin-bottom:2px;">
+    <tr><th style="width:14%;">시기</th><th style="width:18%;">방향</th><th style="width:32%;">성과</th><th>학습 → 전환 이유</th></tr>
+    <tr><td>2024.01</td><td>AI 남자친구</td><td>23명 설문, 30% 적극 연락, 4.35% 유료 전환</td><td>AI 감정 연결 가능 → K-pop 특화 부재</td></tr>
+    <tr><td>2024.07</td><td>BTS AI (미국)</td><td>K-pop 팬이 15분 만에 깊은 이야기 공유</td><td>K-pop이 최강 드라이버 → 저작권 리스크</td></tr>
+    <tr><td>2025.07</td><td>가상 아이돌 (자체 IP)</td><td>500K TikTok 조회, 500명 가입 (5일)</td><td>자체 IP + 바이럴 증명 → 일회성, 리텐션 부재</td></tr>
+    <tr><td style="color:var(--primary); font-weight:700;">2026.02</td><td style="color:var(--primary); font-weight:700;">AIdol 시뮬레이션</td><td style="font-weight:700;">UT에서 서로 모르는 5명이 독립적으로 "육성=결제" 발화</td><td style="font-weight:700;">캐스팅→육성→시즌 경쟁 <b>시뮬레이션 게임</b> 전환</td></tr>
+  </table>
+
+  <div class="sub-heading" style="margin-top:6px; margin-bottom:4px;">신청 시점 제품·서비스 현황, 시장(고객) 반응, 사업화 성과</div>
+  <div style="font-size:8.5px; color:var(--sub); line-height:1.55; margin-bottom:2px;">
+    <b>완료 기능</b>: 연습생 캐스팅(A~F등급, 선착순 경쟁) | 커스텀 멤버 생성(MBTI 4축 슬라이더) | 그룹 구성(K-pop 9개 포지션, AI 그룹명/컨셉 생성) | 1:N 멀티 페르소나 AI 채팅(멤버별 MBTI+포지션 고유 성격) | 콘텐츠 공유(데뷔 발표/프로필 자동 생성, 피드형 UI) | 탐색/디스커버리(팔로우, 바이럴 CTA). <b>모바일 앱</b>(Flutter) 채팅까지 구현 완료, Play 스토어 출시 예정(2026.08).<br>
+    <b>시장 반응</b>: 대표자 직접 심층 인터뷰 <b>50명+</b>(13~57세, WhatsApp/Instagram/X/TikTok 등 전 채널) | 별도 현지화 없이 <b>90개국 10,000명+ 방문</b>(PostHog) | 마케팅비 약 35,000원으로 TikTok <b>500K 조회, 855명 가입</b>(CAC 약 7원, 업계 1/1,000) | 공모전에서 <b>6명이 10~12만원 자발 결제</b>(총 65만원, 전환율 50%) — 결제 이유: "내 아이돌인데 대충 만들기 싫어서" | 이메일 리드 <b>4,813명</b>, 신규 기능 알림 시 5% 재방문 | Stripe 크레딧 결제 <b>운영 중</b>($0.99~$4.99)
+  </div>
+
+  <div class="sub-heading" style="margin-top:6px; margin-bottom:4px;">AI/ML 기반 모바일 서비스 현황</div>
+  <table style="font-size:8.5px; margin-bottom:0;">
+    <tr><th style="width:16%;">기술</th><th style="width:26%;">모델</th><th>설명</th></tr>
+    <tr><td><b>AI 채팅</b></td><td>Gemini 2.5 Pro/Flash</td><td>MBTI 기반 T/F 분화 멀티 페르소나 1:N 그룹 채팅. 공감 프레임워크 4단계 + LLM-as-a-Judge(GPT-4o, Claude Sonnet) 정량 평가 + 6종 Edge Case 안전성 검증</td></tr>
+    <tr><td><b>AI 이미지</b></td><td>Imagen 4 (Gemini API)</td><td>블록 구조 프롬프트(고정+가변 분리), 17개 조합 x 2회 실험, 다인종 다양성 검증 완료. Stripe 크레딧 결제 운영 중</td></tr>
+    <tr><td><b>AI 음성</b></td><td>Fish Audio TTS, ElevenLabs</td><td>멤버별 고유 음성 합성(음성 메시지/영상 통화). AI 라이브 스트리밍(LiveKit+Hedra) 개발 예정</td></tr>
+    <tr><td><b>인프라</b></td><td>Google Cloud</td><td>Cloud Run 5개 서비스, GCS, Firebase FCM/Analytics. 모바일 앱 Flutter 기반, Play 스토어 출시 예정(2026.08)</td></tr>
+  </table>
+
+  <div class="page-brand">AIDOL</div>
+  <div class="page-num">6~8 / 15</div>
+</div>
+
+<!-- ==================== 2-2. 실현 및 구체화 방안 (축약) ==================== -->
+<div class="page" style="padding:12mm 20mm;">
+  <div class="sec-tag">2. 실현가능성 (Solution)</div>
+  <div class="sec-title" style="margin-bottom:8px;">2-2. <b>실현 및 구체화 방안</b></div>
+
+  <div class="sub-heading" style="margin-top:6px; margin-bottom:4px;">① 고객 요구사항 분석 → 핵심 기능 개선·고도화 방안</div>
+  <table style="font-size:8.5px; margin-bottom:4px;">
+    <tr><th style="width:24%;">UT/인터뷰 발견</th><th style="width:26%;">파악된 문제점</th><th style="width:30%;">개선·고도화 방안</th><th>일정</th></tr>
+    <tr><td>"한 번 만들고 끝이라 질릴 것"(U9)</td><td>일회성 생성 후 리텐션 장치 없음(현재 5%)</td><td><b>일일 훈련 + 스탯 성장</b>(F→S 승급)</td><td>04~06월</td></tr>
+    <tr><td>"경쟁이 있어야 돼"(U1/U2)</td><td>다른 사용자와 겨루기 구조 부재, FOMO 미활용</td><td><b>시즌 경쟁 루프</b>(주간 순위, 팬투표)</td><td>05~07월</td></tr>
+    <tr><td>"뺏기면 안 돼"(U8)</td><td>소유감 유지할 지속적 케어 구조 없음</td><td><b>주간 미션 + 멤버 간 케미</b>(MBTI 궁합)</td><td>04~08월</td></tr>
+    <tr><td>"목소리 들리면 좋겠다" / "앱이면 매일"</td><td>텍스트 전용 + 웹 전용 → 몰입·리텐션 한계</td><td><b>TTS 음성 합성 + 모바일 앱 + FCM 푸시</b></td><td>04~08월</td></tr>
+    <tr><td>"대충 만들기 싫어서" 12만원 결제</td><td>비주얼 품질 기대치 높음(현재 Fast 모델)</td><td><b>Imagen 4 Ultra 업그레이드</b>(Fast→Ultra)</td><td>06~08월</td></tr>
+  </table>
+
+  <div class="sub-heading" style="margin-top:6px; margin-bottom:4px;">② 경쟁사 대비 차별성 확보 방안</div>
+  <table style="font-size:8.5px; margin-bottom:2px;">
+    <tr><th>경쟁사</th><th>문제점 (못하는 것)</th><th>AIdol 차별성 확보 방안</th></tr>
+    <tr><td><b>PLAVE</b> 454억</td><td>기획사가 만든 캐릭터 — 팬은 소비자일 뿐</td><td>사용자가 직접 캐스팅·구성·육성하는 구조 (IKEA Effect)</td></tr>
+    <tr><td><b>Bubble</b> 749억</td><td>일방향 메시지(아이돌→팬), 양방향 소통 불가</td><td>Gemini 기반 1:N 멀티 페르소나 AI 채팅, MBTI T/F 분화</td></tr>
+    <tr><td><b>Weverse</b> 2,556억</td><td>커뮤니티 있으나 콘텐츠 생성/육성/경쟁 없음</td><td>Imagen 4 콘텐츠 자동 생성 + 피드형 공유 + 시즌 경쟁</td></tr>
+    <tr><td><b>Character.AI</b> MAU 2,000만</td><td>범용 AI — K-pop 특화/이미지 생성/육성 없음</td><td>K-pop 버티컬 특화 + 육성 게임 루프 + AI 얼굴 생성</td></tr>
+  </table>
+  <div style="font-size:8.5px; color:var(--sub); line-height:1.5; margin-bottom:2px;">
+    <b>핵심 기술 차별화</b>: 1) 다중 사용자 AI 채팅(계층적 컨텍스트 빌더 588줄) — CTO 스캐터랩 '핑퐁'(→200만 사용자 '이루다') 개발 경험 | 2) AI 라이브 스트리밍(LiveKit+Hedra+TTS) — CTO 네이버 대규모 라이브 스트리밍 시스템 개발 + P2P 특허 3건 | 3) 실시간 인프라 — Socket.IO + Redis + Cloud Run 5개 서비스
+  </div>
+
+  <div class="sub-heading" style="margin-top:6px; margin-bottom:3px;">③ 기술 보호 계획 + ④ AI/ML 서비스 고도화</div>
+  <div style="font-size:8.5px; color:var(--sub); line-height:1.5; margin-bottom:2px;">
+    <b>CTO 기존 특허 3건</b>(미국/일본/한국): P2P 라이브 스트리밍 → 현 AI 라이브 스트리밍에 직접 연계 | <b>신규 출원 검토</b>(2026 H2): 멀티 페르소나 1:N AI 채팅 + AI 라이브 스트리밍 시스템 | 컨텍스트 엔지니어링 + K-pop 미학 특화 프롬프트 블록 구조 노하우 → 기술 진입장벽
+  </div>
+  <table style="font-size:8.5px;">
+    <tr><th style="width:26%;">서비스</th><th>고도화 계획</th><th style="width:30%;">기대 효과</th></tr>
+    <tr><td style="color:var(--primary);">Gemini 2.5 Pro</td><td>프로덕션 채팅 LLM 전환 ($1.25/10M tokens)</td><td>비용 효율 + K-pop 멀티턴 대화 품질 향상</td></tr>
+    <tr><td style="color:var(--primary);">Imagen 4 Ultra</td><td>Face Generator Fast→Ultra 업그레이드</td><td>$0.02→$0.06/장, K-pop 미학 최고 품질</td></tr>
+    <tr><td style="color:var(--primary);">Veo 3 / Firebase Studio</td><td>AI 뮤직비디오 자동 생성 PoC + 에이전틱 개발</td><td>사용자 그룹 MV 자동 생성 + 개발 생산성</td></tr>
+    <tr><td style="color:var(--primary);">Cloud 크레딧 $350K</td><td>$250K(Y1) + $100K(Y2), GKE/Cloud Run/BigQuery</td><td>글로벌 스케일링 인프라 비용 해소</td></tr>
+  </table>
+
+  <div class="page-brand">AIDOL</div>
+  <div class="page-num">9 / 15</div>
+</div>
+
+</body>
+</html>
