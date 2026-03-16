@@ -7,7 +7,7 @@ on:
 jobs:
   create-meeting-note:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,8 +19,8 @@ jobs:
 
       - name: Wait for Fireflies processing
         run: |
-          echo "⏳ Waiting 3 minutes for Fireflies to finish processing …"
-          sleep 180
+          echo "⏳ Waiting 5 minutes for Fireflies to finish processing …"
+          sleep 300
 
       - name: Fetch transcript, summarize, create PR
         env:
