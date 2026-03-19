@@ -15,9 +15,10 @@ const MEETING_ID = process.env.MEETING_ID;
 const FIREFLIES_API_KEY = process.env.FIREFLIES_API_KEY;
 
 // ─── config ─────────────────────────────────────────────────────
-const MIN_TRANSCRIPT_SENTENCES = Number(process.env.MIN_TRANSCRIPT_SENTENCES || 120);
-const MIN_TRANSCRIPT_DURATION_SEC = Number(process.env.MIN_TRANSCRIPT_DURATION_SEC || 5 * 60);
-const MAX_TRANSCRIPT_CHARS = Number(process.env.MAX_TRANSCRIPT_CHARS || 120_000);
+// 짧은 미팅도 처리하도록 기본값 완화 (sentences > 10, duration > 30초)
+const MIN_TRANSCRIPT_SENTENCES = Number(process.env.MIN_TRANSCRIPT_SENTENCES || 10);
+const MIN_TRANSCRIPT_DURATION_SEC = Number(process.env.MIN_TRANSCRIPT_DURATION_SEC || 30);
+const MAX_TRANSCRIPT_CHARS = Number(process.env.MAX_TRANSCRIPT_CHARS || 180_000);
 const LLM_MAX_TOKENS = Number(process.env.LLM_MAX_TOKENS || 8192);
 const STABLE_POLLS_REQUIRED = Number(process.env.STABLE_POLLS_REQUIRED || 2);
 const MAX_RETRIES = Number(process.env.TRANSCRIPT_MAX_RETRIES || 8);
@@ -35,8 +36,9 @@ const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514
 const ANTHROPIC_VERSION = '2023-06-01';
 
 // 팀원 이름 목록 (환경변수로 오버라이드 가능)
+// 주의: 이름 오타 주의! 미진(O) 미지(X), 현준(O) 현주(X), 제형(O) 재형(X), 은재(O) 은제(X)
 const TEAM_NAMES = process.env.MEETING_PARTICIPANT_NAMES
-  || '소연, 수지, 영욱, 제이, 미지, 채연, 은재, 재형, 지영';
+  || '소연, 영욱, 제이, 수지, 은재, 채현, 제형, 지영, 미진, 시영, 현준, 다현';
 
 // ─── helpers ────────────────────────────────────────────────────
 function httpsPost(hostname, path, headers, body) {
@@ -161,7 +163,12 @@ async function getTranscript(meetingId, maxRetries = MAX_RETRIES) {
       }
     }
 
-    if (t && isTranscriptReady(metrics, prevMetrics, stablePolls)) {
+    // Ready 조건: sentences가 충분하면 OK (duration은 보조 체크만)
+    // 짧은 미팅이라도 sentences > MIN_TRANSCRIPT_SENTENCES면 바로 처리
+    const hasSentences = metrics.sentenceCount > MIN_TRANSCRIPT_SENTENCES;
+    const hasDuration = metrics.durationSec >= MIN_TRANSCRIPT_DURATION_SEC;
+    
+    if (t && hasSentences && (hasDuration || isTranscriptReady(metrics, prevMetrics, stablePolls))) {
       console.log(`[Fireflies] ✅ transcript ready — ${metrics.sentenceCount} sentences, ${Math.round(metrics.durationSec / 60)}min, stablePolls=${stablePolls}`);
       return t;
     }
