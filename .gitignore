@@ -5,6 +5,11 @@
 .obsidian/
 *.md:Zone.Identifier
 *:Zone.Identifier
+__pycache__/
+*.pyc
+
+# Claude Code
+.claude/worktrees/
 
 # auto-generated
 __pycache__/

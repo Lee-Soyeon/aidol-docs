@@ -103,6 +103,12 @@ files:
         - Lee-Soyeon
       required: 1
 
+  # meetings: 소연 작성 → 수지 리뷰
+  - 'meetings/**':
+      reviewers:
+        - soojilee000-rgb
+      required: 1
+
   # 그 외 전체 → 소연
   - '**':
       reviewers:

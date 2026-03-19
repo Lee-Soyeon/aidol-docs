@@ -350,6 +350,7 @@ function generateMeetingNote(transcript, summary, model) {
   const participants = transcript.participants?.join(', ') || 'Unknown';
   const keywords = transcript.summary?.keywords || [];
 
+
   const titleSlug = transcript.title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -358,6 +359,7 @@ function generateMeetingNote(transcript, summary, model) {
     .slice(0, 50);
 
   const filename = `${dateStr.slice(2)}-${titleSlug}.md`;
+
 
   const content = `# ${transcript.title}
 
@@ -387,6 +389,7 @@ function createPR(filename, content, model) {
   execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
 
   execSync(`git checkout -b "${branchName}"`);
+
 
   fs.mkdirSync('meetings', { recursive: true });
   fs.writeFileSync(filePath, content);
