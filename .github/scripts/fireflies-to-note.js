@@ -199,8 +199,10 @@ function buildPrompt(transcript) {
   const participants = transcript.participants?.join(', ') || 'Unknown';
 
   const ffOverview = transcript.summary?.overview?.trim();
-  const ffActionItems = transcript.summary?.action_items || [];
-  const ffKeywords = transcript.summary?.keywords || [];
+  const rawActionItems = transcript.summary?.action_items;
+  const ffActionItems = Array.isArray(rawActionItems) ? rawActionItems : [];
+  const rawKeywords = transcript.summary?.keywords;
+  const ffKeywords = Array.isArray(rawKeywords) ? rawKeywords : [];
 
   const systemPrompt = [
     '당신은 스타트업 AIdol 팀의 미팅록 작성자입니다.',
