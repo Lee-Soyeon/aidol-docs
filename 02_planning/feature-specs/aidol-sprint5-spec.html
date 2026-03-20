@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIdol Sprint 5 — 육성 시스템 기능명세서</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #000000;
+    --primary-light: #444444;
+    --primary-dark: #000000;
+    --bg: #FFFFFF;
+    --bg-section: #F7F7F7;
+    --bg-card: #FFFFFF;
+    --bg-card-alt: #FAFAFA;
+    --bg-phone: #FFFFFF;
+    --text: #111111;
+    --text-muted: #666666;
+    --text-dim: #999999;
+    --border: rgba(0,0,0,0.1);
+    --border-active: rgba(0,0,0,0.4);
+  }
+
+  body {
+    font-family: 'Noto Sans KR', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    padding: 80px 60px 60px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  .hero-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--primary-light); margin-bottom: 16px;
+  }
+  .hero h1 { font-size: 48px; font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+  .hero .subtitle { font-size: 18px; color: var(--text-muted); font-weight: 300; }
+  .hero-meta {
+    display: flex; gap: 24px; justify-content: center; margin-top: 28px;
+    font-size: 13px; color: var(--text-dim);
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* ─── TOC ─── */
+  .toc {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex; gap: 0; overflow-x: auto;
+  }
+  .toc a {
+    padding: 14px 20px; font-size: 13px; font-weight: 500;
+    color: var(--text-muted); text-decoration: none; white-space: nowrap;
+    border-bottom: 2px solid transparent; transition: all 0.2s;
+  }
+  .toc a:hover { color: var(--primary-light); border-bottom-color: var(--primary); }
+
+  /* ─── Section ─── */
+  .section {
+    padding: 80px 60px;
+    border-bottom: 1px solid var(--border);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .section-alt { background: var(--bg-section); }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--primary-light); margin-bottom: 8px;
+  }
+  .section-title { font-size: 36px; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+  .section-desc { font-size: 16px; color: var(--text-muted); max-width: 700px; margin-bottom: 40px; }
+
+  /* ─── Layout ─── */
+  .spec-layout {
+    display: grid; grid-template-columns: 320px 1fr; gap: 60px; align-items: start;
+  }
+  .spec-layout.reverse { grid-template-columns: 1fr 320px; }
+  .spec-content { display: flex; flex-direction: column; gap: 28px; }
+
+  /* ─── Phone ─── */
+  .phone {
+    width: 320px; min-height: 580px;
+    background: var(--bg-phone);
+    border-radius: 36px;
+    border: 2px solid rgba(0,0,0,0.12);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.08);
+    position: sticky; top: 80px;
+  }
+  .phone-dark {
+    background: #1A1A1A;
+    border-color: rgba(255,255,255,0.1);
+  }
+  .phone-status {
+    height: 44px; padding: 12px 24px; display: flex; justify-content: space-between;
+    align-items: center; font-size: 12px; font-weight: 600; color: var(--text-muted);
+  }
+  .phone-dark .phone-status { color: #888; }
+  .phone-header {
+    padding: 0 20px 16px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .phone-dark .phone-header { border-color: rgba(255,255,255,0.1); }
+  .phone-header-back { font-size: 20px; color: var(--text-muted); }
+  .phone-dark .phone-header-back { color: #aaa; }
+  .phone-header-title { font-size: 17px; font-weight: 700; flex: 1; }
+  .phone-dark .phone-header-title { color: #fff; }
+  .phone-body { padding: 0; }
+  .phone-body-pad { padding: 20px; }
+  .phone-nav {
+    display: flex; border-top: 1px solid var(--border);
+    background: rgba(255,255,255,0.95);
+  }
+  .phone-dark .phone-nav {
+    border-color: rgba(255,255,255,0.1);
+    background: rgba(26,26,26,0.95);
+  }
+  .phone-nav-item {
+    flex: 1; text-align: center; padding: 10px 0 8px; font-size: 10px;
+    color: var(--text-dim);
+  }
+  .phone-dark .phone-nav-item { color: #666; }
+  .phone-nav-item.active { color: var(--primary-light); }
+  .phone-dark .phone-nav-item.active { color: #fff; }
+  .phone-nav-item span { display: block; font-size: 18px; margin-bottom: 2px; }
+
+  /* ─── Phone UI ─── */
+  .p-card {
+    background: var(--bg-card); border-radius: 14px; padding: 16px;
+    border: 1px solid var(--border); margin-bottom: 12px;
+  }
+  .p-card-dark {
+    background: #252525; border-color: rgba(255,255,255,0.08);
+  }
+  .p-btn {
+    display: block; width: 100%; padding: 14px; border-radius: 12px;
+    text-align: center; font-size: 15px; font-weight: 700;
+    background: #111; color: white; margin-top: 12px;
+  }
+  .p-btn-outline {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-muted); font-weight: 500;
+  }
+  .p-btn-disabled { background: #F5F5F5; color: var(--text-dim); }
+  .p-chip {
+    display: inline-block; padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; margin: 3px;
+    background: #F5F5F5; color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .p-chip.selected { background: #F0F0F0; color: #333; border-color: #333; }
+  .p-chip-dark { background: #333; color: #ccc; border-color: #444; }
+  .p-chip-dark.selected { background: #555; color: #fff; border-color: #888; }
+
+  /* ─── Stat Bars ─── */
+  .p-stat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .p-stat-name { font-size: 12px; font-weight: 600; width: 42px; text-align: right; }
+  .p-stat-bar { flex: 1; height: 18px; background: #F5F5F5; border-radius: 9px; overflow: hidden; }
+  .p-stat-bar-dark { background: #333; }
+  .p-stat-fill {
+    height: 100%; border-radius: 9px; display: flex; align-items: center;
+    justify-content: flex-end; padding-right: 8px; font-size: 10px; font-weight: 700; color: #fff;
+  }
+  .p-stat-fill.vocal { background: #333; }
+  .p-stat-fill.dance { background: #555; }
+  .p-stat-fill.rap { background: #666; }
+  .p-stat-fill.visual { background: #444; }
+  .p-stat-fill.charm { background: #555; }
+  .p-stat-fill.stamina { background: #666; }
+  .p-stat-locked {
+    flex: 1; height: 18px; background: #F8F8F8; border-radius: 9px;
+    display: flex; align-items: center; padding-left: 10px; font-size: 10px; color: var(--text-dim);
+  }
+  .p-stat-locked-dark { background: #2a2a2a; color: #555; }
+
+  /* ─── Collection Grid ─── */
+  .p-collection-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .p-collection-item {
+    aspect-ratio: 3/4; background: #F0F0F0; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+    position: relative;
+  }
+  .p-collection-item.new::after {
+    content: "NEW"; position: absolute; top: 4px; left: 4px;
+    background: #111; color: #fff; font-size: 8px; font-weight: 700;
+    padding: 2px 5px; border-radius: 4px;
+  }
+  .p-collection-item.empty {
+    background: #FAFAFA; border: 2px dashed #DDD; color: #CCC; font-size: 20px; font-weight: 300;
+  }
+  .p-collection-item-dark {
+    background: #333;
+  }
+  .p-collection-item-dark.empty {
+    background: #252525; border-color: #444; color: #555;
+  }
+
+  /* ─── Grade Badge ─── */
+  .grade { display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; }
+  .grade-sm { width: 28px; height: 28px; font-size: 14px; border-radius: 7px; }
+  .grade-md { width: 40px; height: 40px; font-size: 20px; border-radius: 10px; }
+  .grade-lg { width: 56px; height: 56px; font-size: 28px; border-radius: 14px; }
+  .grade-f { background: #E5E5E5; color: #666; }
+  .grade-d { background: #CCCCCC; color: #222; }
+  .grade-c { background: #999999; color: #fff; }
+  .grade-b { background: #555555; color: #fff; }
+  .grade-a { background: #111111; color: #fff; }
+
+  /* ─── Spec Cards ─── */
+  .spec-card {
+    background: var(--bg-card); border-radius: 16px; padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .spec-card h4 {
+    font-size: 16px; font-weight: 700; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .spec-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .spec-table th {
+    text-align: left; padding: 10px 14px; font-size: 12px; font-weight: 600;
+    color: #333; background: #F5F5F5; border-bottom: 1px solid var(--border);
+  }
+  .spec-table td {
+    padding: 10px 14px; font-size: 13px; border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .spec-table tr:last-child td { border-bottom: none; }
+
+  /* ─── Flow Steps ─── */
+  .flow-steps { display: flex; flex-direction: column; gap: 0; }
+  .flow-step {
+    display: flex; gap: 16px; padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-num {
+    width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+    background: #F0F0F0; color: var(--primary-light);
+  }
+  .flow-text h5 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .flow-text p { font-size: 13px; color: var(--text-muted); }
+
+  /* ─── Tags ─── */
+  .tag {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+  }
+  .tag-gray { background: #F5F5F5; color: #999; }
+  .tag-green { background: #F0F0F0; color: #222; }
+  .tag-blue { background: #F0F0F0; color: #333; }
+  .tag-red { background: #F0F0F0; color: #444; }
+
+  /* ─── Highlight Box ─── */
+  .highlight-box {
+    background: #F7F7F7; border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 14px; padding: 20px 24px;
+  }
+  .highlight-box p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+  .highlight-box strong { color: var(--text); }
+
+  /* ─── Concept Cards ─── */
+  .p-concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .p-concept-card {
+    background: var(--bg-card); border-radius: 12px; padding: 14px;
+    text-align: center; border: 1.5px solid var(--border); cursor: pointer;
+  }
+  .p-concept-card.selected { border-color: #333; background: #F5F5F5; }
+  .p-concept-card .emoji { font-size: 24px; margin-bottom: 4px; }
+  .p-concept-card .name { font-size: 13px; font-weight: 700; }
+  .p-concept-card .desc { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+  /* ─── Menu Items ─── */
+  .p-menu-item {
+    display: flex; align-items: center; gap: 14px; padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .p-menu-icon {
+    width: 44px; height: 44px; border-radius: 12px; background: #F5F5F5;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .p-menu-info { flex: 1; }
+  .p-menu-info .title { font-size: 15px; font-weight: 700; }
+  .p-menu-info .desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .p-menu-arrow { font-size: 16px; color: var(--text-dim); }
+  .p-menu-badge {
+    padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;
+    background: #F0F0F0; color: #333;
+  }
+  .p-menu-locked { opacity: 0.45; }
+
+  /* ─── Bottom Sheet ─── */
+  .p-bottom-sheet {
+    background: #fff; border-radius: 20px 20px 0 0;
+    padding: 24px 20px 30px; margin-top: 12px;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.08);
+  }
+  .p-sheet-handle {
+    width: 40px; height: 4px; background: #ddd; border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+
+  /* ─── Celebration ─── */
+  .p-celebration { text-align: center; padding: 30px 20px; }
+  .p-celebration .particles { font-size: 36px; margin-bottom: 8px; }
+  .p-celebration .stat-value { font-size: 40px; font-weight: 900; color: #222; margin: 4px 0; }
+  .p-celebration .sub-stats { font-size: 13px; color: var(--text-dim); }
+
+  /* ─── Progress ─── */
+  .p-progress-bar {
+    width: 100%; height: 8px; background: #F0F0F0;
+    border-radius: 4px; overflow: hidden; margin: 8px 0;
+  }
+  .p-progress-fill { height: 100%; border-radius: 4px; background: #333; }
+
+  /* ─── Tabs in phone ─── */
+  .p-tabs { display: flex; border-bottom: 1px solid var(--border); }
+  .p-tab {
+    flex: 1; text-align: center; padding: 12px 0; font-size: 13px; font-weight: 600;
+    color: var(--text-dim); border-bottom: 2px solid transparent;
+  }
+  .p-tab.active { color: var(--text); border-bottom-color: var(--text); }
+  .p-tab-dark { color: #666; }
+  .p-tab-dark.active { color: #fff; border-bottom-color: #fff; }
+
+/* ─── Responsive ─── */
+  @media (max-width: 960px) {
+    .spec-layout, .spec-layout.reverse {
+      grid-template-columns: 1fr; justify-items: center;
+    }
+    .phone { position: static; }
+    .section { padding: 50px 24px; }
+    .hero { padding: 50px 24px 40px; }
+    .hero h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ HERO ════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-label">AIdol Phase 2 &middot; Sprint 5</div>
+  <h1>육성 시스템 기능명세서</h1>
+  <div class="subtitle">스탯 체계 &middot; 멤버 프로필 &middot; 연습하기 &middot; 포토카드 &middot; 보상 모드 &middot; 스탯 부여</div>
+  <div class="hero-meta">
+    <span>Author: mijin</span>
+    <span>Date: 2026.03.17</span>
+    <span>기능명세 v1.0</span>
+  </div>
+  <div style="margin-top:16px;">
+    <a href="https://www.figma.com/design/YKX5YVvaGFjSsTWXTDD7DT/A-1.-UI?node-id=3112-19849&t=69DLtfw2WsbsMMwp-4" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; padding:10px 20px; background:#111; color:#fff; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none;">
+      Figma UI 디자인 보기 &rarr;
+    </a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ TOC ════════════════════════════════ -->
+<nav class="toc">
+  <a href="#stat-system">1. 스탯 체계</a>
+  <a href="#profile-ui">2. 프로필 스탯 UI</a>
+  <a href="#practice-menu">3. 연습하기 메뉴</a>
+  <a href="#photocard-draw">4. 포토카드 드로우</a>
+  <a href="#photocard-collection">4-1. 포토카드 컬렉션</a>
+  <a href="#reward-mode">5. 보상 모드</a>
+  <a href="#stat-logic">6. 스탯 부여 로직</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SECTION 1: 스탯 체계 정의
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="stat-system">
+  <div class="section-label">Section 01</div>
+  <div class="section-title">스탯 체계 정의</div>
+  <div class="section-desc">6개 스탯 &middot; F~A 등급 체계 &middot; 과금 설계 근거 &middot; 성장 시뮬레이션</div>
+
+  <div class="spec-layout reverse">
+    <div class="spec-content">
+
+      <!-- 6 Stats Definition -->
+      <div class="spec-card">
+        <h4>&#x1F4CA; 6대 스탯 정의</h4>
+        <table class="spec-table">
+          <thead>
+            <tr><th>스탯</th><th>코드</th><th>Max</th><th>상태</th><th>설명</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>보컬</strong></td><td>vocal</td><td>200</td><td>Active</td><td>노래 실력. 보이스 콘텐츠에서 메인 상승</td></tr>
+            <tr><td><strong>댄스</strong></td><td>dance</td><td>200</td><td>&#x1F512; Locked</td><td>안무 실력. Phase 3에서 해금</td></tr>
+            <tr><td><strong>랩</strong></td><td>rap</td><td>200</td><td>&#x1F512; Locked</td><td>랩 스킬. Phase 3에서 해금</td></tr>
+            <tr><td><strong>비주얼</strong></td><td>visual</td><td>200</td><td>Active</td><td>외모/스타일. 포토카드에서 메인 상승 (측면/전신은 Sprint 6 해금)</td></tr>
+            <tr><td><strong>매력</strong></td><td>charm</td><td>200</td><td>Active</td><td>팬 끌어당기는 힘. 모든 콘텐츠에서 서브 상승</td></tr>
+            <tr><td><strong>체력</strong></td><td>stamina</td><td>200</td><td>Active</td><td>활동 지속력. 모든 콘텐츠에서 서브 상승</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px; font-size:13px; color:#666;">
+          <strong>Total Max:</strong> 1,200 (6 &times; 200) &mdash; Phase 2에서는 댄스/랩 locked이므로 실질 max = 800
+        </div>
+      </div>
+
+      <!-- Grade System -->
+      <div class="spec-card">
+        <h4>&#x1F3C6; 등급 체계 (F ~ A)</h4>
+        <table class="spec-table">
+          <thead>
+            <tr><th>Grade</th><th>Range</th><th>Width</th><th>타이틀</th><th>설계 근거</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="grade grade-sm grade-f">F</span></td>
+              <td>0 ~ 59</td>
+              <td>60</td>
+              <td>연습생</td>
+              <td>무료 3회로 F 후반(~24) 도달. 추가 충전 시 빠른 탈출 가능. <strong>빠른 초기 성취감</strong> 제공</td>
+            </tr>
+            <tr>
+              <td><span class="grade grade-sm grade-d">D</span></td>
+              <td>60 ~ 149</td>
+              <td>90</td>
+              <td>신인</td>
+              <td>무료 3회 + 추가 충전으로 D 진입 가능. <strong>첫 과금의 성취 지점</strong>. D&rarr;C는 추가 유료 필요</td>
+            </tr>
+            <tr>
+              <td><span class="grade grade-sm grade-c">C</span></td>
+              <td>150 ~ 299</td>
+              <td>150</td>
+              <td>루키</td>
+              <td><strong>첫 과금 관문.</strong> 약 2~3 5-Pack 구매 필요. 차트/대결 해금으로 동기부여</td>
+            </tr>
+            <tr>
+              <td><span class="grade grade-sm grade-b">B</span></td>
+              <td>300 ~ 499</td>
+              <td>200</td>
+              <td>인기 아이돌</td>
+              <td><strong>헤비 유저 영역.</strong> 특별 컨셉/콜라보 해금. 높은 충성도 구간</td>
+            </tr>
+            <tr>
+              <td><span class="grade grade-sm grade-a">A</span></td>
+              <td>500+</td>
+              <td>700+</td>
+              <td>톱 아이돌</td>
+              <td><strong>최상위 tier.</strong> 데뷔 무대/한정 콘텐츠 해금. 장기 목표</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Width Curve Rationale -->
+      <div class="spec-card">
+        <h4>&#x1F4C8; 등급 폭 설계 — 로그 커브 근거</h4>
+        <div style="font-size:13px; color:#666; margin-bottom:16px;">
+          등급 폭: 60 &rarr; 90 &rarr; 150 &rarr; 200 &rarr; 700+ (로그 곡선)<br>
+          초반 등급은 빠르게, 후반 등급은 점진적으로 어렵게. 이는 게임 디자인의 핵심 원칙인 <strong>"Easy to learn, hard to master"</strong>를 반영합니다.
+        </div>
+        <div style="display:flex; gap:4px; align-items:flex-end; height:120px; padding:0 10px;">
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;">
+            <div style="font-size:10px; font-weight:700; margin-bottom:4px;">60</div>
+            <div style="width:100%; height:15px; background:#E5E5E5; border-radius:4px;"></div>
+            <div style="font-size:10px; margin-top:4px; color:#999;">F</div>
+          </div>
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;">
+            <div style="font-size:10px; font-weight:700; margin-bottom:4px;">90</div>
+            <div style="width:100%; height:22px; background:#CCC; border-radius:4px;"></div>
+            <div style="font-size:10px; margin-top:4px; color:#999;">D</div>
+          </div>
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;">
+            <div style="font-size:10px; font-weight:700; margin-bottom:4px;">150</div>
+            <div style="width:100%; height:38px; background:#999; border-radius:4px;"></div>
+            <div style="font-size:10px; margin-top:4px; color:#999;">C</div>
+          </div>
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;">
+            <div style="font-size:10px; font-weight:700; margin-bottom:4px;">200</div>
+            <div style="width:100%; height:50px; background:#555; border-radius:4px;"></div>
+            <div style="font-size:10px; margin-top:4px; color:#999;">B</div>
+          </div>
+          <div style="flex:2; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;">
+            <div style="font-size:10px; font-weight:700; margin-bottom:4px;">700+</div>
+            <div style="width:100%; height:110px; background:#111; border-radius:4px;"></div>
+            <div style="font-size:10px; margin-top:4px; color:#999;">A</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Free Tier Calculation -->
+      <div class="spec-card">
+        <h4>&#x1F4B0; 무료 티어 성장 시뮬레이션</h4>
+        <div class="highlight-box" style="margin-bottom:16px;">
+          <p>무료 유저 기준: 포토카드 <strong>무료 3회</strong> (유일한 활성 콘텐츠) = <strong>총 3회 세션</strong><br>
+          무료 스탯 상승: 세션당 +8 (비주얼 +5, 매력 +2, 체력 +1)<br>
+          총 획득: 3 &times; 8 = <strong>~24 stats &rarr; F 등급 후반</strong></p>
+        </div>
+        <table class="spec-table">
+          <thead>
+            <tr><th>구간</th><th>필요 스탯</th><th>확정 모드 (세션)</th><th>랜덤 모드 (평균)</th><th>과금 예상 (5-Pack=$3.99)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Free (무료 3회)</td><td>~24</td><td>무료 3회로 달성</td><td>~28 (랜덤 평균)</td><td>$0 (무료)</td></tr>
+            <tr><td>F &rarr; D (60)</td><td>36 추가</td><td>~5 세션</td><td>~4 세션</td><td>확정: 2&times;3회충전 = $1.98<br>랜덤: 1~2&times;3회충전 = $0.99~$1.98</td></tr>
+            <tr><td>D &rarr; C (150)</td><td>90 추가</td><td>~12 세션</td><td>~10 세션</td><td>확정: 4&times;3회충전 = $3.96<br>랜덤: 3~4&times;3회충전 = $2.97~$3.96</td></tr>
+            <tr><td>C &rarr; B (300)</td><td>150 추가</td><td>~19 세션</td><td>~16 세션</td><td>확정: 7&times;3회충전 = $6.93<br>랜덤: 6&times;3회충전 = $5.94</td></tr>
+            <tr><td>B &rarr; A (500)</td><td>200 추가</td><td>~25 세션</td><td>~22 세션</td><td>확정: 9&times;3회충전 = $8.91<br>랜덤: 7~8&times;3회충전 = $6.93~$7.92</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px; font-size:13px; color:#666;">
+          <strong>누적 합산 (무료 &rarr; A까지):</strong><br>
+          확정 모드: ~60 유료 세션 (20&times;3회충전 = <strong>$19.80</strong>)<br>
+          랜덤 모드: ~52 유료 세션 (평균, 17~18&times;3회충전 = <strong>$16.83~$17.82</strong>)<br>
+          <em>* 랜덤 모드 EV = 9.2/세션으로 확정(8.0)보다 높지만 분산이 큼</em>
+        </div>
+        <div class="highlight-box" style="margin-top:12px;">
+          <p>※ 결제 금액은 테스트용 예시입니다. 실제 가격은 결제 전환율 데이터를 기반으로 조정됩니다.</p>
+        </div>
+      </div>
+      <div class="spec-card">
+        <h4>&#x26A0; 엣지 케이스</h4>
+        <table class="spec-table">
+          <thead><tr><th>Case</th><th>처리</th></tr></thead>
+          <tbody>
+            <tr><td>개별 스탯 200 cap 도달</td><td>해당 스탯 증가분 0 처리. 나머지 정상 부여. UI에 "MAX" 뱃지 표시</td></tr>
+            <tr><td>Locked 스탯 콘텐츠 탭</td><td>Locked 상태의 콘텐츠는 선택 불가. 탭 시 "곧 해금됩니다" 토스트</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Phone Mockup: Stat Overview -->
+    <div class="phone">
+      <div class="phone-status">
+        <span>9:41</span>
+        <span>&#x1F4F6; &#x1F50B;</span>
+      </div>
+      <div class="phone-header">
+        <div class="phone-header-back">&larr;</div>
+        <div class="phone-header-title">멤버 스탯</div>
+      </div>
+      <div class="phone-body phone-body-pad">
+        <!-- Grade Badge -->
+        <div style="text-align:center; margin-bottom:20px;">
+          <span class="grade grade-lg grade-d">D</span>
+          <div style="font-size:14px; font-weight:700; margin-top:8px;">이안</div>
+          <div style="font-size:11px; color:#999;">신인 &middot; Total 69</div>
+        </div>
+
+        <!-- Stat Bars -->
+        <div style="margin-bottom:16px;">
+          <div class="p-stat-row">
+            <div class="p-stat-name">보컬</div>
+            <div class="p-stat-bar"><div class="p-stat-fill vocal" style="width:10%; min-width:30px;">21</div></div>
+          </div>
+          <div class="p-stat-row">
+            <div class="p-stat-name" style="color:#999;">댄스</div>
+            <div class="p-stat-locked">&#x1F512; Phase 3</div>
+          </div>
+          <div class="p-stat-row">
+            <div class="p-stat-name" style="color:#999;">랩</div>
+            <div class="p-stat-locked">&#x1F512; Phase 3</div>
+          </div>
+          <div class="p-stat-row">
+            <div class="p-stat-name">비주얼</div>
+            <div class="p-stat-bar"><div class="p-stat-fill visual" style="width:15%; min-width:30px;">24</div></div>
+          </div>
+          <div class="p-stat-row">
+            <div class="p-stat-name">매력</div>
+            <div class="p-stat-bar"><div class="p-stat-fill charm" style="width:8%; min-width:30px;">15</div></div>
+          </div>
+          <div class="p-stat-row">
+            <div class="p-stat-name">체력</div>
+            <div class="p-stat-bar"><div class="p-stat-fill stamina" style="width:5%; min-width:24px;">9</div></div>
+          </div>
+        </div>
+
+        <!-- Grade Progress -->
+        <div style="background:#F7F7F7; border-radius:12px; padding:14px; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
+            <span style="font-weight:700;">D &rarr; C 등급업</span>
+            <span style="color:#999;">69 / 150</span>
+          </div>
+          <div class="p-progress-bar">
+            <div class="p-progress-fill" style="width:46%;"></div>
+          </div>
+          <div style="font-size:10px; color:#999; margin-top:4px;">81 스탯 더 필요</div>
+        </div>
+
+      </div>
+      <div class="phone-nav">
+        <div class="phone-nav-item"><span>&#x1F3E0;</span>홈</div>
+        <div class="phone-nav-item"><span>&#x1F50D;</span>발견</div>
+        <div class="phone-nav-item active"><span>&#x1F465;</span>내그룹</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SECTION 2: 멤버 프로필 스탯 UI
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="section section-alt" id="profile-ui">
+  <div class="section-label">Section 02</div>
+  <div class="section-title">멤버 프로필 스탯 UI</div>
+  <div class="section-desc">기존 다크 테마 프로필에 탭 시스템으로 스탯 통합. 프로필 탭 + 스탯 탭 구조.</div>
+
+  <div class="spec-layout">
+    <!-- Phone: Profile Tab (Dark) -->
+    <div class="phone phone-dark">
+      <div class="phone-status">
+        <span style="color:#888;">9:41</span>
+        <span style="color:#888;">&#x1F4F6; &#x1F50B;</span>
+      </div>
+      <!-- Member Selector -->
+      <div style="padding:12px 20px; display:flex; gap:8px; justify-content:center;">
+        <div style="padding:6px 16px; border-radius:20px; font-size:13px; font-weight:700; background:#fff; color:#1a1a1a;">이안</div>
+        <div style="padding:6px 16px; border-radius:20px; font-size:13px; font-weight:500; background:#333; color:#888;">서윤</div>
+        <div style="padding:6px 16px; border-radius:20px; font-size:13px; font-weight:500; background:#333; color:#888;">테오</div>
+      </div>
+      <!-- Profile Image Area -->
+      <div style="height:200px; background:linear-gradient(135deg, #2a2a2a, #333); display:flex; align-items:center; justify-content:center;">
+        <div style="width:120px; height:120px; border-radius:60px; background:#444; display:flex; align-items:center; justify-content:center; font-size:48px;">&#x1F464;</div>
+      </div>
+      <!-- Member Info -->
+      <div style="padding:16px 20px 0; text-align:center;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:20px; font-weight:900; color:#fff;">이안</span>
+          <span class="grade grade-sm grade-d">D</span>
+        </div>
+        <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+          <span style="padding:4px 10px; border-radius:12px; font-size:11px; background:#333; color:#aaa;">ENFJ</span>
+          <span style="padding:4px 10px; border-radius:12px; font-size:11px; background:#333; color:#aaa;">메인보컬</span>
+          <span style="padding:4px 10px; border-radius:12px; font-size:11px; background:#333; color:#aaa;">Total 69</span>
+        </div>
+      </div>
+      <!-- Tabs -->
+      <div style="display:flex; margin-top:16px; border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div style="flex:1; text-align:center; padding:12px 0; font-size:13px; font-weight:600; color:#fff; border-bottom:2px solid #fff;">프로필</div>
+        <div style="flex:1; text-align:center; padding:12px 0; font-size:13px; font-weight:600; color:#555;">스탯</div>
+      </div>
+      <!-- Profile Tab Content -->
+      <div style="padding:16px 20px;">
+        <div style="font-size:12px; color:#888; line-height:1.7;">
+          모든 것에 진심인 리더. 팀의 중심에서 항상 웃음을 잃지 않는 따뜻한 성격의 소유자. 무대 위에서의 카리스마와 무대 밖 다정함의 갭이 매력.
+        </div>
+        <div style="margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08);">
+          <div style="font-size:11px; font-weight:700; color:#666; letter-spacing:1px; margin-bottom:8px;">멤버와의 케미</div>
+          <div style="font-size:12px; color:#888; line-height:1.7;">
+            <strong style="color:#aaa;">서윤</strong>과는 장난꾸러기 콤비, <strong style="color:#aaa;">테오</strong>와는 음악적 소울메이트
+          </div>
+        </div>
+      </div>
+      <div class="phone-nav" style="border-color:rgba(255,255,255,0.1); background:rgba(26,26,26,0.95);">
+        <div class="phone-nav-item" style="color:#555;"><span>&#x1F3E0;</span>홈</div>
+        <div class="phone-nav-item" style="color:#555;"><span>&#x1F50D;</span>발견</div>
+        <div class="phone-nav-item" style="color:#fff;"><span>&#x1F465;</span>내그룹</div>
+      </div>
+    </div>
+
+    <div class="spec-content">
+      <!-- Tab System Spec -->
+      <div class="spec-card">
+        <h4>&#x1F4CB; 탭 시스템 설계</h4>
+        <table class="spec-table">
+          <thead><tr><th>항목</th><th>상세</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Tab 1: 프로필</strong></td><td>기존 Bio 텍스트 + 멤버 케미 정보. 현행과 동일</td></tr>
+            <tr><td><strong>Tab 2: 스탯</strong></td><td>6-stat bars + grade badge + grade progress bar + 레이더 차트 placeholder</td></tr>
+            <tr><td>탭 전환 애니메이션</td><td>Cross-fade, 200ms ease-out. 탭 indicator 슬라이드</td></tr>
+            <tr><td>기본 선택 탭</td><td>첫 방문: 프로필 / 스탯 변동 직후 진입: 스탯</td></tr>
+            <tr><td>탭 상태 보존</td><td>화면 이탈 후 재진입 시 마지막 선택 탭 유지</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Profile Layout -->
+      <div class="spec-card">
+        <h4>&#x1F3A8; 프로필 화면 레이아웃</h4>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">
+              <h5>멤버 셀렉터 (상단)</h5>
+              <p>이안 / 서윤 / 테오 — 가로 pill 버튼. 선택된 멤버 = 흰색 pill (dark bg)</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-text">
+              <h5>프로필 이미지 영역</h5>
+              <p>높이 200px. 둥근 프로필 이미지 중앙 배치. 배경은 gradient overlay</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-text">
+              <h5>멤버 정보</h5>
+              <p>이름 + Grade 뱃지 (인라인). 태그: 성격타입, 포지션, Total stat</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">4</div>
+            <div class="flow-text">
+              <h5>탭 바</h5>
+              <p>"프로필" | "스탯" — 선택된 탭 하단에 2px 흰색 인디케이터</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">5</div>
+            <div class="flow-text">
+              <h5>탭 콘텐츠 영역</h5>
+              <p>프로필: Bio + 케미 / 스탯: 6개 바 + 등급 프로그레스 + 레이더 차트</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat Tab Detail -->
+      <div class="spec-card">
+        <h4>&#x1F4CA; 스탯 탭 상세 구성</h4>
+        <table class="spec-table">
+          <thead><tr><th>요소</th><th>위치</th><th>상세</th></tr></thead>
+          <tbody>
+            <tr><td>Grade 뱃지 (large)</td><td>상단 중앙</td><td>56px 사각 뱃지 + 타이틀 텍스트 ("신인")</td></tr>
+            <tr><td>Total Stat</td><td>뱃지 하단</td><td>"Total 69 / 1,200" 형식</td></tr>
+            <tr><td>6-Stat Bars</td><td>중앙</td><td>각 바: 이름(42px) + bar(flex) + 수치. Locked은 자물쇠 표시</td></tr>
+            <tr><td>등급 프로그레스</td><td>바 하단</td><td>"D &rarr; C" + progress bar + "81 스탯 더 필요"</td></tr>
+            <tr><td>레이더 차트</td><td>하단</td><td>Phase 2: placeholder ("Coming Soon"). Phase 3에서 6각형 차트</td></tr>
+            <tr><td><strong>액션 버튼</strong></td><td>최하단</td><td>"연습하기" (primary) + "컬렉션" (secondary) 가로 배치. 연습하기 &rarr; 연습 메뉴, 컬렉션 &rarr; 포토카드 컬렉션</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Second Phone: Stat Tab -->
+  <div style="margin-top:60px;">
+    <div style="font-size:14px; font-weight:700; margin-bottom:20px; text-align:center; color:#666;">&#x25BC; 스탯 탭 활성 상태</div>
+    <div style="display:flex; justify-content:center;">
+      <div class="phone phone-dark" style="position:static;">
+        <div class="phone-status">
+          <span style="color:#888;">9:41</span>
+          <span style="color:#888;">&#x1F4F6; &#x1F50B;</span>
+        </div>
+        <div style="padding:12px 20px; display:flex; gap:8px; justify-content:center;">
+          <div style="padding:6px 16px; border-radius:20px; font-size:13px; font-weight:700; background:#fff; color:#1a1a1a;">이안</div>
+          <div style="padding:6px 16px; border-radius:20px; font-size:13px; font-weight:500; background:#333; color:#888;">서윤</div>
+          <div style="padding:6px 16px; border-radius:20px; font-size:13px; font-weight:500; background:#333; color:#888;">테오</div>
+        </div>
+        <div style="height:140px; background:linear-gradient(135deg, #2a2a2a, #333); display:flex; align-items:center; justify-content:center;">
+          <div style="width:90px; height:90px; border-radius:45px; background:#444; display:flex; align-items:center; justify-content:center; font-size:36px;">&#x1F464;</div>
+        </div>
+        <div style="padding:12px 20px 0; text-align:center;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
+            <span style="font-size:18px; font-weight:900; color:#fff;">이안</span>
+            <span class="grade grade-sm grade-d">D</span>
+          </div>
+        </div>
+        <!-- Tabs - Stat active -->
+        <div style="display:flex; margin-top:12px; border-bottom:1px solid rgba(255,255,255,0.1);">
+          <div style="flex:1; text-align:center; padding:12px 0; font-size:13px; font-weight:600; color:#555;">프로필</div>
+          <div style="flex:1; text-align:center; padding:12px 0; font-size:13px; font-weight:600; color:#fff; border-bottom:2px solid #fff;">스탯</div>
+        </div>
+        <!-- Stat Tab Content -->
+        <div style="padding:16px 20px;">
+          <div style="text-align:center; margin-bottom:14px;">
+            <span class="grade grade-md grade-d" style="display:inline-flex;">D</span>
+            <div style="font-size:12px; color:#888; margin-top:6px;">Total 69 / 1,200</div>
+          </div>
+          <!-- Dark stat bars -->
+          <div style="margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+              <span style="font-size:11px; font-weight:600; width:38px; text-align:right; color:#aaa;">보컬</span>
+              <div style="flex:1; height:16px; background:#333; border-radius:8px; overflow:hidden;">
+                <div style="width:10%; min-width:28px; height:100%; background:#888; border-radius:8px; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; font-size:9px; font-weight:700; color:#fff;">21</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+              <span style="font-size:11px; font-weight:600; width:38px; text-align:right; color:#555;">댄스</span>
+              <div style="flex:1; height:16px; background:#2a2a2a; border-radius:8px; display:flex; align-items:center; padding-left:8px; font-size:9px; color:#444;">&#x1F512; Phase 3</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+              <span style="font-size:11px; font-weight:600; width:38px; text-align:right; color:#555;">랩</span>
+              <div style="flex:1; height:16px; background:#2a2a2a; border-radius:8px; display:flex; align-items:center; padding-left:8px; font-size:9px; color:#444;">&#x1F512; Phase 3</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+              <span style="font-size:11px; font-weight:600; width:38px; text-align:right; color:#aaa;">비주얼</span>
+              <div style="flex:1; height:16px; background:#333; border-radius:8px; overflow:hidden;">
+                <div style="width:12%; min-width:28px; height:100%; background:#777; border-radius:8px; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; font-size:9px; font-weight:700; color:#fff;">24</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+              <span style="font-size:11px; font-weight:600; width:38px; text-align:right; color:#aaa;">매력</span>
+              <div style="flex:1; height:16px; background:#333; border-radius:8px; overflow:hidden;">
+                <div style="width:8%; min-width:28px; height:100%; background:#777; border-radius:8px; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; font-size:9px; font-weight:700; color:#fff;">15</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+              <span style="font-size:11px; font-weight:600; width:38px; text-align:right; color:#aaa;">체력</span>
+              <div style="flex:1; height:16px; background:#333; border-radius:8px; overflow:hidden;">
+                <div style="width:5%; min-width:22px; height:100%; background:#666; border-radius:8px; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; font-size:9px; font-weight:700; color:#fff;">9</div>
+              </div>
+            </div>
+          </div>
+          <!-- Grade Progress -->
+          <div style="background:#252525; border-radius:10px; padding:12px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;">
+              <span style="font-weight:700; color:#aaa;">D &rarr; C 등급업</span>
+              <span style="color:#666;">69 / 150</span>
+            </div>
+            <div style="width:100%; height:6px; background:#333; border-radius:3px; overflow:hidden;">
+              <div style="width:46%; height:100%; background:#888; border-radius:3px;"></div>
+            </div>
+          </div>
+          <!-- Radar placeholder -->
+          <div style="background:#252525; border-radius:10px; padding:20px; text-align:center;">
+            <div style="font-size:11px; color:#555;">&#x1F4CA; 레이더 차트</div>
+            <div style="font-size:10px; color:#444; margin-top:4px;">Coming in Phase 3</div>
+          </div>
+          <!-- Quick Actions -->
+          <div style="display:flex; gap:8px; margin-top:14px;">
+            <div style="flex:1; padding:12px; background:#fff; border-radius:10px; text-align:center; font-size:13px; font-weight:700; color:#1a1a1a; cursor:pointer;">연습하기</div>
+            <div style="flex:1; padding:12px; background:#333; border:1px solid #444; border-radius:10px; text-align:center; font-size:13px; font-weight:700; color:#ccc; cursor:pointer;">컬렉션</div>
+          </div>
+        </div>
+        <div class="phone-nav" style="border-color:rgba(255,255,255,0.1); background:rgba(26,26,26,0.95);">
+          <div class="phone-nav-item" style="color:#555;"><span>&#x1F3E0;</span>홈</div>
+          <div class="phone-nav-item" style="color:#555;"><span>&#x1F50D;</span>발견</div>
+          <div class="phone-nav-item" style="color:#fff;"><span>&#x1F465;</span>내그룹</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SECTION 3: 연습하기 메뉴
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="practice-menu">
+  <div class="section-label">Section 03</div>
+  <div class="section-title">연습하기 메뉴</div>
+  <div class="section-desc">콘텐츠 타입별 메뉴 &middot; 무료 횟수 추적 &middot; 잠금 해제 &middot; 네비게이션 플로우</div>
+
+  <div class="spec-layout">
+    <!-- Phone: Practice Menu -->
+    <div class="phone">
+      <div class="phone-status">
+        <span>9:41</span>
+        <span>&#x1F4F6; &#x1F50B;</span>
+      </div>
+      <div class="phone-header">
+        <div class="phone-header-back">&larr;</div>
+        <div class="phone-header-title">연습하기</div>
+      </div>
+      <div class="phone-body">
+        <!-- Member selector -->
+        <div style="padding:12px 20px; display:flex; gap:8px;">
+          <div style="padding:6px 14px; border-radius:16px; font-size:12px; font-weight:700; background:#111; color:#fff;">이안</div>
+          <div style="padding:6px 14px; border-radius:16px; font-size:12px; font-weight:500; background:#F5F5F5; color:#999;">서윤</div>
+          <div style="padding:6px 14px; border-radius:16px; font-size:12px; font-weight:500; background:#F5F5F5; color:#999;">테오</div>
+        </div>
+
+        <!-- Free count banner -->
+        <div style="margin:0 20px 12px; padding:10px 14px; background:#F7F7F7; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; color:#666;">남은 무료 연습</span>
+          <span style="font-size:14px; font-weight:900; color:#111;">3 / 3</span>
+        </div>
+
+        <!-- Menu Items -->
+        <div class="p-menu-item">
+          <div class="p-menu-icon">&#x1F4F8;</div>
+          <div class="p-menu-info">
+            <div class="title">포토카드</div>
+            <div class="desc">비주얼 +5 &middot; 매력 +2 &middot; 체력 +1</div>
+          </div>
+          <div class="p-menu-badge">무료 3회</div>
+          <div class="p-menu-arrow">&rsaquo;</div>
+        </div>
+
+        <div class="p-menu-item" style="position:relative; cursor:pointer;" onclick="this.querySelector('.coming-soon-toast').style.display='flex'; setTimeout(()=>this.querySelector('.coming-soon-toast').style.display='none',2000)">
+          <div class="p-menu-icon">&#x1F9CD;</div>
+          <div class="p-menu-info">
+            <div class="title">측면 이미지</div>
+            <div class="desc">비주얼 +5 &middot; 매력 +2 &middot; 체력 +1</div>
+          </div>
+          <div class="p-menu-arrow">&rsaquo;</div>
+          <div class="coming-soon-toast" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.85); color:#fff; padding:10px 18px; border-radius:10px; font-size:12px; font-weight:600; white-space:nowrap; z-index:10;">곧 출시됩니다. 기대해주세요!</div>
+        </div>
+
+        <div class="p-menu-item" style="position:relative; cursor:pointer;" onclick="this.querySelector('.coming-soon-toast').style.display='flex'; setTimeout(()=>this.querySelector('.coming-soon-toast').style.display='none',2000)">
+          <div class="p-menu-icon">&#x1F9CD;&#x200D;&#x2642;&#xFE0F;</div>
+          <div class="p-menu-info">
+            <div class="title">전신 이미지</div>
+            <div class="desc">비주얼 +5 &middot; 매력 +2 &middot; 체력 +1</div>
+          </div>
+          <div class="p-menu-arrow">&rsaquo;</div>
+          <div class="coming-soon-toast" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.85); color:#fff; padding:10px 18px; border-radius:10px; font-size:12px; font-weight:600; white-space:nowrap; z-index:10;">곧 출시됩니다. 기대해주세요!</div>
+        </div>
+
+        <div class="p-menu-item" style="position:relative; cursor:pointer;" onclick="this.querySelector('.coming-soon-toast').style.display='flex'; setTimeout(()=>this.querySelector('.coming-soon-toast').style.display='none',2000)">
+          <div class="p-menu-icon">&#x1F3A4;</div>
+          <div class="p-menu-info">
+            <div class="title">보이스</div>
+            <div class="desc">보컬 +5 &middot; 매력 +2 &middot; 체력 +1</div>
+          </div>
+          <div class="p-menu-arrow">&rsaquo;</div>
+          <div class="coming-soon-toast" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.85); color:#fff; padding:10px 18px; border-radius:10px; font-size:12px; font-weight:600; white-space:nowrap; z-index:10;">곧 출시됩니다. 기대해주세요!</div>
+        </div>
+
+        <div class="p-menu-item" style="position:relative; cursor:pointer;" onclick="this.querySelector('.coming-soon-toast').style.display='flex'; setTimeout(()=>this.querySelector('.coming-soon-toast').style.display='none',2000)">
+          <div class="p-menu-icon">&#x1F57A;</div>
+          <div class="p-menu-info">
+            <div class="title">안무</div>
+            <div class="desc">댄스 +5 &middot; 매력 +2 &middot; 체력 +1</div>
+          </div>
+          <div class="p-menu-arrow">&rsaquo;</div>
+          <div class="coming-soon-toast" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.85); color:#fff; padding:10px 18px; border-radius:10px; font-size:12px; font-weight:600; white-space:nowrap; z-index:10;">곧 출시됩니다. 기대해주세요!</div>
+        </div>
+      </div>
+      <div class="phone-nav">
+        <div class="phone-nav-item"><span>&#x1F3E0;</span>홈</div>
+        <div class="phone-nav-item"><span>&#x1F50D;</span>발견</div>
+        <div class="phone-nav-item active"><span>&#x1F465;</span>내그룹</div>
+      </div>
+    </div>
+
+    <div class="spec-content">
+      <!-- Menu Structure -->
+      <div class="spec-card">
+        <h4>&#x1F4CB; 메뉴 구조</h4>
+        <table class="spec-table">
+          <thead><tr><th>콘텐츠</th><th>상태</th><th>무료</th><th>메인 스탯</th><th>서브 스탯</th><th>고정 합계</th></tr></thead>
+          <tbody>
+            <tr><td><strong>포토카드</strong></td><td>Active</td><td>3회</td><td>비주얼 +5</td><td>매력 +2, 체력 +1</td><td>+8</td></tr>
+            <tr><td>측면 이미지</td><td>&#x1F512; Locked</td><td>-</td><td>비주얼</td><td>매력, 체력</td><td>Sprint 6 해금 예정</td></tr>
+            <tr><td>전신 이미지</td><td>&#x1F512; Locked</td><td>-</td><td>비주얼</td><td>매력, 체력</td><td>Sprint 6 해금 예정</td></tr>
+            <tr><td>보이스</td><td>&#x1F512; Locked</td><td>-</td><td>보컬</td><td>매력, 체력</td><td>Phase 2 후반 해금</td></tr>
+            <tr><td>안무</td><td>&#x1F512; Locked</td><td>-</td><td>댄스</td><td>매력, 체력</td><td>Phase 3 해금</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Free Count Logic -->
+      <div class="spec-card">
+        <h4>&#x1F4AF; 횟수 정책</h4>
+        <table class="spec-table">
+          <thead><tr><th>규칙</th><th>상세</th></tr></thead>
+          <tbody>
+            <tr><td>무료 횟수 단위</td><td><strong>멤버별, 콘텐츠 타입별 독립 3회</strong></td></tr>
+            <tr><td>범위</td><td>그룹/사용자 단위가 아닌 <strong>멤버 단위</strong>. 다중 그룹 소유 시에도 각 멤버별 독립</td></tr>
+            <tr><td>Sprint 5 멤버당 무료</td><td><strong>3회</strong> (포토카드 3회. 타 콘텐츠는 해금 시 각각 3회 추가)</td></tr>
+            <tr><td>카운트 표시</td><td>메뉴 항목 우측에 "무료 N회" 뱃지</td></tr>
+            <tr><td>배너 표시</td><td>상단에 "남은 연습 N / 3"</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Charge Flow -->
+      <div class="spec-card">
+        <h4>&#x1F4B3; 충전 플로우</h4>
+        <p style="margin-bottom:12px; padding:8px 12px; background:#FFF3E0; border-radius:8px; font-size:13px;">
+          Sprint 5는 <strong>기간 한정 무료</strong>. 실제 결제는 전환율 데이터 검증 후 도입.
+        </p>
+        <table class="spec-table">
+          <thead><tr><th>조건</th><th>동작</th></tr></thead>
+          <tbody>
+            <tr><td>무료 3회 소진 후 생성 시도</td><td>"추가 충전 필요" 다이얼로그 ("결제하기" / "나중에")</td></tr>
+            <tr><td>"결제하기" 클릭</td><td>"현재 무료 체험 기간입니다" 안내 + 3회 충전</td></tr>
+            <tr><td>충전 후 소진, 재클릭</td><td>"N시간 후 다시 충전할 수 있습니다"</td></tr>
+            <tr><td>24시간 경과 후 클릭</td><td>3회 재충전 (반복 가능)</td></tr>
+          </tbody>
+        </table>
+        <ul style="font-size:13px; margin-top:8px; padding-left:20px; line-height:1.8;">
+          <li><strong>무료 크레딧</strong>: 멤버별, 타입별 독립 3회</li>
+          <li><strong>충전 크레딧</strong>: 사용자 단위 (멤버 간 공유)</li>
+          <li><strong>소비 우선순위</strong>: 해당 멤버 무료 먼저 &rarr; 충전 크레딧</li>
+          <li><strong>목적</strong>: 결제 전환율 측정 (클릭률 + 가격 기대치 형성)</li>
+        </ul>
+      </div>
+
+      <!-- Navigation Flow -->
+      <div class="spec-card">
+        <h4>&#x1F5FA; 네비게이션 플로우</h4>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">
+              <h5>내그룹 &rarr; 연습하기</h5>
+              <p>내그룹 화면에서 "연습하기" 버튼 탭</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-text">
+              <h5>멤버 선택</h5>
+              <p>상단 멤버 셀렉터에서 대상 멤버 선택 (기본: 마지막 선택 멤버)</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-text">
+              <h5>포토카드 선택 (유일한 활성 콘텐츠)</h5>
+              <p>포토카드 메뉴 탭 &rarr; 생성 플로우 진입. Locked 아이템 탭 &rarr; "곧 해금됩니다" 토스트</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">4</div>
+            <div class="flow-text">
+              <h5>컨셉 선택</h5>
+              <p>School Life / Finger Heart / Daily / Random 중 하나 선택</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">5</div>
+            <div class="flow-text">
+              <h5>"만들기" 버튼 탭</h5>
+              <p>컨셉 선택 후 "만들기" 버튼으로 생성 시작</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">6</div>
+            <div class="flow-text">
+              <h5>횟수 있음 &rarr; 모드 선택 &rarr; 생성</h5>
+              <p>횟수 남아있으면 모드 선택 바텀시트 (확정/랜덤) 노출 후 생성 진행</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">7</div>
+            <div class="flow-text">
+              <h5>횟수 없음 &rarr; "결제하기" 다이얼로그</h5>
+              <p>횟수 소진 시 "결제하기" 버튼 노출. 클릭 시 "무료 체험 기간" 안내 + 3회 충전 / 소진 후 재클릭: 24시간 쿨다운</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">8</div>
+            <div class="flow-text">
+              <h5>충전 후 &rarr; 모드 선택 &rarr; 생성</h5>
+              <p>충전 크레딧은 사용자 단위 (멤버 간 공유). 소비 시 해당 멤버 무료 먼저 &rarr; 충전 크레딧 순</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">9</div>
+            <div class="flow-text">
+              <h5>결과 &rarr; 저장</h5>
+              <p>완성된 포토카드 표시 + 스탯 상승 + "저장하기" / "다시 만들기" 버튼</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Handling -->
+      <div class="spec-card">
+        <h4>&#x26A0; 엣지 케이스</h4>
+        <table class="spec-table">
+          <thead><tr><th>Case</th><th>처리</th></tr></thead>
+          <tbody>
+            <tr><td>횟수 0 + 쿨다운 없음</td><td>"결제하기" &rarr; "무료 체험 기간" 안내 + 3회 충전</td></tr>
+            <tr><td>횟수 0 + 쿨다운 중</td><td>"결제하기" &rarr; "N시간 후 다시 충전할 수 있습니다" 안내</td></tr>
+            <tr><td>Locked 콘텐츠 탭</td><td>"곧 해금됩니다" 토스트 (2초)</td></tr>
+            <tr><td>멤버 전환 로딩 실패</td><td>이전 멤버 유지 + 에러 토스트 + Retry</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SECTION 4: 포토카드 드로우
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="section section-alt" id="photocard-draw">
+  <div class="section-label">Section 04</div>
+  <div class="section-title">포토카드 드로우</div>
+  <div class="section-desc">컨셉 선택 &rarr; 모드 선택 &rarr; AI 생성 &rarr; 결과(Jackpot/Normal) &rarr; 완성 카드. 4단계 플로우.</div>
+
+  <!-- ── Row 1: Step 1, Step 2, Step 3 (3 phones) ── -->
+  <div style="font-size:14px; font-weight:700; margin-bottom:20px; text-align:center; color:#666;">&#x25BC; Step 1 ~ 3: 컨셉 선택 &rarr; 모드 선택 &rarr; 로딩</div>
+  <div style="display:flex; gap:30px; justify-content:center; flex-wrap:wrap;">
+
+    <!-- Step 1: 컨셉 선택 -->
+    <div class="phone" style="position:static;">
+      <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+      <div class="phone-header">
+        <div class="phone-header-back">&larr;</div>
+        <div class="phone-header-title">포토카드 만들기</div>
+      </div>
+      <div class="phone-body phone-body-pad">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+          <div style="width:40px; height:40px; border-radius:20px; background:#F0F0F0; display:flex; align-items:center; justify-content:center; font-size:18px;">&#x1F464;</div>
+          <div>
+            <div style="font-size:14px; font-weight:700;">이안</div>
+            <div style="font-size:11px; color:#999;">D등급 &middot; 비주얼 24</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:4px; margin-bottom:20px;">
+          <div style="flex:1; height:3px; background:#111; border-radius:2px;"></div>
+          <div style="flex:1; height:3px; background:#E5E5E5; border-radius:2px;"></div>
+          <div style="flex:1; height:3px; background:#E5E5E5; border-radius:2px;"></div>
+        </div>
+        <div style="font-size:13px; font-weight:700; margin-bottom:12px;">컨셉 선택</div>
+        <div class="p-concept-grid">
+          <div class="p-concept-card selected">
+            <div class="emoji">&#x1F3EB;</div>
+            <div class="name">School Life</div>
+            <div class="desc">교복 &middot; 캠퍼스</div>
+          </div>
+          <div class="p-concept-card">
+            <div class="emoji">&#x1F90C;</div>
+            <div class="name">Finger Heart</div>
+            <div class="desc">하트 &middot; 귀여움</div>
+          </div>
+          <div class="p-concept-card">
+            <div class="emoji">&#x2615;</div>
+            <div class="name">Daily</div>
+            <div class="desc">일상 &middot; 캐주얼</div>
+          </div>
+          <div class="p-concept-card" style="position:relative; cursor:pointer;" onclick="this.querySelector('.coming-soon-toast').style.display='flex'; setTimeout(()=>this.querySelector('.coming-soon-toast').style.display='none',2000)">
+            <div class="emoji">&#x1F3B2;</div>
+            <div class="name">Random</div>
+            <div class="desc">랜덤 스타일</div>
+            <div class="coming-soon-toast" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.85); color:#fff; padding:8px 14px; border-radius:8px; font-size:11px; font-weight:600; white-space:nowrap; z-index:10;">곧 출시됩니다. 기대해주세요!</div>
+          </div>
+        </div>
+        <div class="p-btn" style="margin-top:20px;">만들기</div>
+      </div>
+      <div style="text-align:center; padding:8px; font-size:11px; font-weight:700; color:#999; background:#F7F7F7; border-top:1px solid var(--border);">Step 1: 컨셉 선택</div>
+    </div>
+
+    <!-- Step 2: 보상 모드 선택 바텀시트 -->
+    <div class="phone" style="position:static;">
+      <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+      <div class="phone-header">
+        <div class="phone-header-back">&larr;</div>
+        <div class="phone-header-title">포토카드 만들기</div>
+      </div>
+      <div class="phone-body">
+        <!-- Dimmed background content -->
+        <div style="padding:20px; opacity:0.3;">
+          <div style="font-size:13px; font-weight:700; margin-bottom:8px;">컨셉: School Life &#x1F3EB;</div>
+          <div style="height:40px; background:#F5F5F5; border-radius:12px;"></div>
+        </div>
+        <!-- Bottom Sheet -->
+        <div class="p-bottom-sheet">
+          <div class="p-sheet-handle"></div>
+          <div style="font-size:16px; font-weight:800; margin-bottom:4px;">보상 모드 선택</div>
+          <div style="font-size:12px; color:#999; margin-bottom:16px;">스탯 획득 방식을 선택하세요</div>
+          <div style="border:2px solid #333; border-radius:14px; padding:14px; margin-bottom:10px; background:#FAFAFA;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-size:14px; font-weight:800;">&#x2705; 확정 모드</span>
+              <span style="padding:3px 10px; border-radius:10px; font-size:10px; font-weight:700; background:#F0F0F0; color:#333;">안전</span>
+            </div>
+            <div style="font-size:12px; color:#666;">매 세션 고정 <strong>+8 스탯</strong> (비주얼 +5, 매력 +2, 체력 +1)</div>
+          </div>
+          <div style="border:1.5px solid var(--border); border-radius:14px; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-size:14px; font-weight:800;">&#x1F3B0; 랜덤 모드</span>
+              <span style="padding:3px 10px; border-radius:10px; font-size:10px; font-weight:700; background:#FFF3E0; color:#E65100;">도전</span>
+            </div>
+            <div style="font-size:12px; color:#666;">평균 <strong>+9.2</strong> &middot; 최대 <strong>+23 잭팟!</strong></div>
+          </div>
+          <div class="p-btn" style="margin-top:14px;">선택 완료</div>
+        </div>
+      </div>
+      <div style="text-align:center; padding:8px; font-size:11px; font-weight:700; color:#999; background:#F7F7F7; border-top:1px solid var(--border);">Step 2: 모드 선택</div>
+    </div>
+
+    <!-- Step 3: 카드 생성 중 (로딩) -->
+    <div class="phone" style="position:static;">
+      <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+      <div class="phone-body" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:540px; padding:40px 30px;">
+        <div style="font-size:64px; margin-bottom:20px; animation: pulse 1.5s infinite;">&#x2728;</div>
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">카드 생성 중...</div>
+        <div style="font-size:13px; color:#999; text-align:center; margin-bottom:24px;">이안의 School Life 컨셉<br>포토카드를 만들고 있어요</div>
+        <div style="width:200px; height:6px; background:#F0F0F0; border-radius:3px; overflow:hidden;">
+          <div style="width:65%; height:100%; background:#333; border-radius:3px;"></div>
+        </div>
+        <div style="font-size:11px; color:#bbb; margin-top:12px;">잠시만 기다려주세요...</div>
+        <div style="font-size:10px; color:#ccc; margin-top:20px; text-align:center; line-height:1.6;">
+          "이안이 열심히 포즈를 잡고 있어요" &#x1F4F8;<br>
+          텍스트 3초마다 로테이션
+        </div>
+      </div>
+      <div style="text-align:center; padding:8px; font-size:11px; font-weight:700; color:#999; background:#F7F7F7; border-top:1px solid var(--border);">Step 3: 생성 중 (로딩)</div>
+    </div>
+  </div>
+
+  <!-- ── Row 2: Step 4a, Step 4b, Step 5 (3 phones) ── -->
+  <div style="margin-top:60px;">
+    <div style="font-size:14px; font-weight:700; margin-bottom:20px; text-align:center; color:#666;">&#x25BC; Step 4a ~ 4b: Jackpot 결과 &rarr; 완성 카드 + 버튼</div>
+    <div style="display:flex; gap:30px; justify-content:center; flex-wrap:wrap;">
+
+      <!-- Step 4a: Jackpot 결과 UI (랜덤 모드) -->
+      <div class="phone phone-dark" style="position:static;">
+        <div class="phone-status"><span style="color:#888;">9:41</span><span style="color:#888;">&#x1F4F6; &#x1F50B;</span></div>
+        <div class="phone-body" style="padding:30px 20px; background:#1A1A1A;">
+          <div style="text-align:center; margin-bottom:16px;">
+            <div style="font-size:11px; color:#666; letter-spacing:2px; font-weight:600;">RANDOM MODE</div>
+            <div style="font-size:48px; margin:8px 0;">&#x1F389;</div>
+            <div style="font-size:28px; font-weight:900; color:#fff; letter-spacing:-1px;">JACKPOT!</div>
+          </div>
+          <div style="text-align:center; margin-bottom:20px;">
+            <div style="font-size:56px; font-weight:900; color:#fff; line-height:1;">+23</div>
+            <div style="font-size:12px; color:#666; margin-top:4px;">스탯 획득</div>
+          </div>
+          <div style="background:#252525; border-radius:14px; padding:16px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-around; text-align:center;">
+              <div>
+                <div style="font-size:10px; color:#666;">비주얼</div>
+                <div style="font-size:22px; font-weight:900; color:#fff;">+15</div>
+              </div>
+              <div style="width:1px; background:#333;"></div>
+              <div>
+                <div style="font-size:10px; color:#666;">매력</div>
+                <div style="font-size:22px; font-weight:900; color:#ccc;">+6</div>
+              </div>
+              <div style="width:1px; background:#333;"></div>
+              <div>
+                <div style="font-size:10px; color:#666;">체력</div>
+                <div style="font-size:22px; font-weight:900; color:#999;">+2</div>
+              </div>
+            </div>
+          </div>
+          <div style="background:#252525; border-radius:14px; padding:12px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;">
+              <span style="font-weight:700; color:#aaa;">D &rarr; C 등급업</span>
+              <span style="color:#666;">92 / 150</span>
+            </div>
+            <div style="width:100%; height:6px; background:#333; border-radius:3px; overflow:hidden;">
+              <div style="width:61%; height:100%; background:#888; border-radius:3px;"></div>
+            </div>
+          </div>
+          <div style="text-align:center; font-size:10px; color:#555; margin-bottom:8px;">&#x2728; 축하 파티클 + 화면 셰이크 효과 &#x2728;</div>
+          <div class="p-btn" style="background:#fff; color:#111;">확인</div>
+        </div>
+        <div style="text-align:center; padding:8px; font-size:11px; font-weight:700; color:#666; background:#252525; border-top:1px solid rgba(255,255,255,0.1);">Step 4a: Jackpot 결과 (랜덤)</div>
+      </div>
+
+      <!-- Step 4b: 완성 카드 + 버튼 (확정 모드 / Normal) -->
+      <div class="phone" style="position:static;">
+        <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+        <div class="phone-body phone-body-pad">
+          <div style="text-align:center; margin-bottom:8px;">
+            <div style="font-size:11px; color:#999; margin-bottom:8px;">&#x1F389; 포토카드 완성!</div>
+          </div>
+          <div style="background:linear-gradient(145deg, #e8e8e8, #f8f8f8); border-radius:16px; padding:4px; margin-bottom:14px; box-shadow:0 8px 24px rgba(0,0,0,0.1);">
+            <div style="background:linear-gradient(135deg, #ddd, #eee); border-radius:13px; height:180px; display:flex; align-items:center; justify-content:center; position:relative;">
+              <div style="font-size:48px;">&#x1F464;</div>
+              <div style="position:absolute; bottom:8px; right:8px; font-size:8px; color:#bbb; background:rgba(255,255,255,0.7); padding:2px 6px; border-radius:4px;">Made with AIdol</div>
+            </div>
+            <div style="padding:10px 12px; display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-size:13px; font-weight:700;">이안</div>
+                <div style="font-size:10px; color:#999;">School Life &middot; #0007</div>
+              </div>
+              <span style="padding:3px 8px; border-radius:8px; font-size:10px; font-weight:700; background:#F0F0F0; color:#333;">Normal</span>
+            </div>
+          </div>
+          <div style="background:#F7F7F7; border-radius:14px; padding:12px; margin-bottom:10px;">
+            <div style="font-size:12px; font-weight:700; margin-bottom:6px;">&#x1F4C8; 스탯 획득</div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <span style="padding:3px 10px; border-radius:10px; font-size:11px; font-weight:700; background:#E8E8E8; color:#333;">비주얼 +5</span>
+              <span style="padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600; background:#F0F0F0; color:#666;">매력 +2</span>
+              <span style="padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600; background:#F0F0F0; color:#666;">체력 +1</span>
+            </div>
+            <div style="font-size:16px; font-weight:900; text-align:center; margin-top:6px;">+8</div>
+          </div>
+          <!-- Action Buttons -->
+          <div class="p-btn">저장하기</div>
+          <div class="p-btn p-btn-outline" style="margin-top:8px;">다시 만들기</div>
+        </div>
+        <div style="text-align:center; padding:8px; font-size:11px; font-weight:700; color:#999; background:#F7F7F7; border-top:1px solid var(--border);">Step 4b: 완성 카드 + 버튼</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Spec Cards ── -->
+  <div style="margin-top:60px; max-width:1200px; margin-left:auto; margin-right:auto;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px;">
+
+      <!-- Step-by-step spec -->
+      <div class="spec-card">
+        <h4>&#x1F3AC; 생성 플로우 (5단계)</h4>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">
+              <h5>컨셉 선택</h5>
+              <p>2&times;2 그리드. School Life / Finger Heart / Daily / Random 중 하나 선택. "만들기" 버튼 탭</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-text">
+              <h5>보상 모드 선택 (바텀시트)</h5>
+              <p>무료/유료 구분 없이 모든 유저에게 표시.<br>
+              "확정 모드 (+8 고정)" vs "랜덤 모드 (+2~+23)" 선택</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-text">
+              <h5>카드 생성 중 (로딩)</h5>
+              <p>파티클 애니메이션 + 프로그레스 바 (fake) + 재미있는 텍스트 로테이션. 예상 시간 5~15초</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">4a</div>
+            <div class="flow-text">
+              <h5>Jackpot 결과 UI (랜덤 모드)</h5>
+              <p>다크 배경 + "JACKPOT!" 텍스트 + 큰 숫자 (+23) + 개별 스탯 분류 (비주얼 +15, 매력 +6, 체력 +2) + 축하 파티클 + 화면 셰이크</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">4b</div>
+            <div class="flow-text">
+              <h5>완성 카드 + 버튼 (확정 모드 / Normal)</h5>
+              <p>카드 프레임 + 시리얼 넘버 + 스탯 획득 표시 (+8). 등급 프로그레스 바 + "저장하기" / "다시 만들기" 버튼</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Concept Options -->
+      <div class="spec-card">
+        <h4>&#x1F3A8; 컨셉 옵션 상세</h4>
+        <table class="spec-table">
+          <thead><tr><th>컨셉</th><th>키워드</th><th>분위기</th></tr></thead>
+          <tbody>
+            <tr><td><strong>School Life</strong></td><td>교복, 캠퍼스, 청춘</td><td>학교 배경, 밝은 자연광, 청량한 분위기</td></tr>
+            <tr><td><strong>Finger Heart</strong></td><td>하트, 귀여움, 팬서비스</td><td>손하트 포즈, 밝은 표정, 팬 친화적</td></tr>
+            <tr><td><strong>Daily</strong></td><td>일상, 캐주얼, 자연스러움</td><td>편안한 분위기, 자연스러운 포즈, 일상 배경</td></tr>
+            <tr><td><strong>Random</strong></td><td>랜덤, 다양한 스타일</td><td>AI가 랜덤으로 컨셉 생성</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+      <!-- Payment / Recharge -->
+      <div class="spec-card">
+        <h4>&#x1F4B3; 충전 다이얼로그</h4>
+        <table class="spec-table">
+          <thead><tr><th>항목</th><th>상세</th></tr></thead>
+          <tbody>
+            <tr><td>노출 조건</td><td>횟수 소진 후 <strong>다음 생성 시도 시</strong> (유저 액션 트리거)</td></tr>
+            <tr><td>Primary 버튼</td><td>"결제하기"</td></tr>
+            <tr><td>Secondary 링크</td><td>"나중에" &rarr; 닫기</td></tr>
+            <tr><td>클릭 동작</td><td>"현재 무료 체험 기간입니다" 안내 + 3회 충전. 충전 크레딧은 사용자 단위 (멤버 간 공유)</td></tr>
+            <tr><td>소진 후 재클릭</td><td>"N시간 후 다시 충전할 수 있습니다" 안내. 24시간 경과 후 반복 충전 가능</td></tr>
+            <tr><td>목적</td><td><strong>결제 전환율 측정</strong> (클릭률 + 가격 기대치 형성)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Error Handling -->
+      <div class="spec-card">
+        <h4>&#x26A0; 에러 처리</h4>
+        <table class="spec-table">
+          <thead><tr><th>Case</th><th>처리</th></tr></thead>
+          <tbody>
+            <tr><td>AI 생성 타임아웃</td><td>"생성 실패" 다이얼로그 + 크레딧 복구</td></tr>
+            <tr><td>크레딧 차감 후 생성 실패</td><td>크레딧 자동 환불 + 토스트 알림</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Payment Dialog Phone Mockup ── -->
+  <div style="margin-top:60px;">
+    <div style="font-size:14px; font-weight:700; margin-bottom:20px; text-align:center; color:#666;">&#x25BC; 횟수 소진 시 충전 다이얼로그</div>
+    <div style="display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
+      <!-- Phone 1: First time - free bonus -->
+      <div class="phone" style="position:static;">
+        <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+        <div class="phone-header">
+          <div class="phone-header-back">&larr;</div>
+          <div class="phone-header-title">포토카드 만들기</div>
+        </div>
+        <div class="phone-body">
+          <div style="padding:20px; opacity:0.2;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:8px;">컨셉 선택</div>
+            <div style="height:80px; background:#F5F5F5; border-radius:12px;"></div>
+          </div>
+          <div style="position:relative; margin:-60px 20px 20px; background:#fff; border-radius:20px; padding:28px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.2); text-align:center;">
+            <div style="font-size:36px; margin-bottom:12px;">&#x1F4AB;</div>
+            <div style="font-size:17px; font-weight:800; margin-bottom:8px;">추가 연습이 필요해요!</div>
+            <div style="font-size:13px; color:#666; line-height:1.6; margin-bottom:20px;">
+              무료 3회를 모두 사용했어요<br>
+              추가 충전이 필요합니다
+            </div>
+            <div class="p-btn" style="margin-top:0;">결제하기</div>
+            <div style="margin-top:14px;">
+              <span style="font-size:13px; color:#999; cursor:pointer;">나중에</span>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; padding:8px; font-size:11px; color:#999;">클릭 시: "무료 체험 기간" 안내 + 3회 충전</div>
+      </div>
+      <!-- Phone 2: Cooldown -->
+      <div class="phone" style="position:static;">
+        <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+        <div class="phone-header">
+          <div class="phone-header-back">&larr;</div>
+          <div class="phone-header-title">포토카드 만들기</div>
+        </div>
+        <div class="phone-body">
+          <div style="padding:20px; opacity:0.2;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:8px;">컨셉 선택</div>
+            <div style="height:80px; background:#F5F5F5; border-radius:12px;"></div>
+          </div>
+          <div style="position:relative; margin:-60px 20px 20px; background:#fff; border-radius:20px; padding:28px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.2); text-align:center;">
+            <div style="font-size:36px; margin-bottom:12px;">&#x23F0;</div>
+            <div style="font-size:17px; font-weight:800; margin-bottom:8px;">24시간 후 가능합니다</div>
+            <div style="font-size:13px; color:#666; line-height:1.6; margin-bottom:20px;">
+              충전 횟수를 모두 사용했어요<br>
+              N시간 후 다시 충전할 수 있습니다
+            </div>
+            <div class="p-btn p-btn-disabled" style="margin-top:0;">결제하기</div>
+            <div style="margin-top:14px;">
+              <span style="font-size:13px; color:#999; cursor:pointer;">닫기</span>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; padding:8px; font-size:11px; color:#999;">충전 소진 후: 24시간 쿨다운, 이후 반복 충전 가능</div>
+      </div>
+    </div>
+    <div style="max-width:700px; margin:20px auto 0; text-align:center;">
+      <div class="highlight-box">
+        <p>※ <strong>무료 크레딧</strong>: 멤버별, 타입별 독립 3회 / <strong>충전 크레딧</strong>: 사용자 단위 (멤버 간 공유)<br>
+        ※ <strong>소비 우선순위</strong>: 해당 멤버 무료 먼저 &rarr; 충전 크레딧<br>
+        ※ 목적: 결제 전환율 측정 (클릭률 + 가격 기대치 형성)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SECTION 4-1: 포토카드 컬렉션
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="photocard-collection">
+  <div class="section-label">Section 04-1</div>
+  <div class="section-title">포토카드 컬렉션</div>
+  <div class="section-desc">생성된 포토카드를 컨셉별로 모아보고 관리하는 수집 화면. 멤버 프로필 &middot; 결과 화면 &middot; 연습하기 메뉴에서 진입.</div>
+
+  <!-- Phone wireframes row -->
+  <div style="display:flex; gap:40px; justify-content:center; flex-wrap:wrap; margin-bottom:48px;">
+
+    <!-- Phone 1: Collection View -->
+    <div>
+      <div style="font-size:12px; font-weight:700; color:#999; text-align:center; margin-bottom:12px; letter-spacing:1px;">COLLECTION VIEW</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+        <div class="phone-header">
+          <span class="phone-header-back">&#8249;</span>
+          <span class="phone-header-title">포토카드 컬렉션</span>
+          <span style="font-size:11px; color:var(--text-dim);">12장</span>
+        </div>
+        <div style="padding:16px 20px;">
+          <!-- Member filter -->
+          <div style="display:flex; gap:8px; margin-bottom:14px;">
+            <div style="text-align:center;">
+              <div style="width:42px; height:42px; border-radius:21px; background:#ddd; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:16px;">&#x1F464;</div>
+              <div style="font-size:9px; margin-top:3px; color:#111; font-weight:600;">이안</div>
+            </div>
+            <div style="text-align:center; opacity:0.4;">
+              <div style="width:42px; height:42px; border-radius:21px; background:#eee; display:flex; align-items:center; justify-content:center; font-size:16px;">&#x1F464;</div>
+              <div style="font-size:9px; margin-top:3px; color:#999;">서윤</div>
+            </div>
+            <div style="text-align:center; opacity:0.4;">
+              <div style="width:42px; height:42px; border-radius:21px; background:#eee; display:flex; align-items:center; justify-content:center; font-size:16px;">&#x1F464;</div>
+              <div style="font-size:9px; margin-top:3px; color:#999;">테오</div>
+            </div>
+          </div>
+
+          <!-- Concept filter tabs -->
+          <div style="display:flex; gap:6px; margin-bottom:16px;">
+            <div class="p-chip selected" style="white-space:nowrap;">전체</div>
+            <div class="p-chip" style="white-space:nowrap;">School Life</div>
+            <div class="p-chip" style="white-space:nowrap;">Finger Heart</div>
+            <div class="p-chip" style="white-space:nowrap;">Daily</div>
+            <div class="p-chip" style="white-space:nowrap;">Random</div>
+          </div>
+
+          <!-- Card Grid -->
+          <div class="p-collection-grid">
+            <div class="p-collection-item new">&#x1F464;</div>
+            <div class="p-collection-item">&#x1F464;</div>
+            <div class="p-collection-item">&#x1F464;</div>
+            <div class="p-collection-item">&#x1F464;</div>
+            <div class="p-collection-item">&#x1F464;</div>
+            <div class="p-collection-item">&#x1F464;</div>
+            <div class="p-collection-item">&#x1F464;</div>
+            <div class="p-collection-item">&#x1F464;</div>
+            <div class="p-collection-item empty">+</div>
+          </div>
+        </div>
+        <div class="phone-nav">
+          <div class="phone-nav-item"><span>&#x1F3E0;</span>홈</div>
+          <div class="phone-nav-item"><span>&#x1F50D;</span>발견</div>
+          <div class="phone-nav-item active"><span>&#x1F465;</span>내그룹</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 2: Card Detail -->
+    <div>
+      <div style="font-size:12px; font-weight:700; color:#999; text-align:center; margin-bottom:12px; letter-spacing:1px;">CARD DETAIL</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+        <div class="phone-header">
+          <span class="phone-header-back">&#8249;</span>
+          <span class="phone-header-title">카드 상세</span>
+        </div>
+        <div style="padding:16px 20px; text-align:center;">
+          <!-- Card preview -->
+          <div style="width:180px; height:240px; background:#E8E8E8; border-radius:14px; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; border:1px solid #ddd;">
+            &#x1F464;
+          </div>
+
+          <!-- Card meta -->
+          <div style="background:#F5F5F5; border-radius:10px; padding:14px; text-align:left; margin-bottom:12px;">
+            <div style="font-size:11px; color:#999; margin-bottom:10px; font-weight:600;">카드 정보</div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#999;">멤버</span>
+              <span style="font-weight:600; color:#333;">이안</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#999;">컨셉</span>
+              <span style="font-weight:600; color:#333;">Finger Heart</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#999;">생성일</span>
+              <span style="font-weight:600; color:#333;">2026.03.15</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px;">
+              <span style="color:#999;">획득 스탯</span>
+              <span style="font-weight:600; color:#333;">비주얼 +5, 매력 +2, 체력 +1</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div style="display:flex; gap:8px;">
+            <div style="flex:1; padding:12px; background:#F0F0F0; border-radius:10px; font-size:12px; font-weight:600; color:#999;">삭제</div>
+          </div>
+        </div>
+        <div class="phone-nav">
+          <div class="phone-nav-item"><span>&#x1F3E0;</span>홈</div>
+          <div class="phone-nav-item"><span>&#x1F50D;</span>발견</div>
+          <div class="phone-nav-item active"><span>&#x1F465;</span>내그룹</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spec content below -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px; max-width:1200px; margin:0 auto;">
+    <div class="spec-card">
+      <h4>&#x1F517; 진입 경로</h4>
+      <table class="spec-table">
+        <thead><tr><th>경로</th><th>동작</th></tr></thead>
+        <tbody>
+          <tr><td><strong>멤버 프로필 스탯 탭</strong></td><td>"컬렉션" 버튼 탭 &rarr; 해당 멤버 컬렉션으로 이동</td></tr>
+          <tr><td><strong>포토카드 결과 화면</strong></td><td>하단 "컬렉션 카드보기" 텍스트 링크 &rarr; 컬렉션 이동</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spec-card">
+      <h4>&#x1F4C1; 컬렉션 화면 구성</h4>
+      <table class="spec-table">
+        <thead><tr><th>요소</th><th>상세</th></tr></thead>
+        <tbody>
+          <tr><td><strong>멤버 필터</strong></td><td>상단 아바타 탭으로 멤버별 필터링. 선택 멤버 = 테두리 강조</td></tr>
+          <tr><td><strong>컨셉 필터 탭</strong></td><td>전체 / School Life / Finger Heart / Daily / Random 가로 chip</td></tr>
+          <tr><td><strong>카드 그리드</strong></td><td>3열, 3:4 비율, 최신순 정렬. 카드 탭 &rarr; 상세 화면</td></tr>
+          <tr><td><strong>NEW 배지</strong></td><td>최근 24시간 내 생성된 카드에 좌상단 표시</td></tr>
+          <tr><td><strong>빈 슬롯 (+)</strong></td><td>탭 시 포토카드 드로우 화면으로 이동</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spec-card">
+      <h4>&#x1F50D; 카드 상세 화면</h4>
+      <table class="spec-table">
+        <thead><tr><th>요소</th><th>상세</th></tr></thead>
+        <tbody>
+          <tr><td><strong>카드 프리뷰</strong></td><td>풀스크린 이미지 + 핀치 줌 지원</td></tr>
+          <tr><td><strong>카드 정보</strong></td><td>멤버 / 컨셉 / 생성일 / 획득 스탯</td></tr>
+          <tr><td><strong>삭제</strong></td><td>확인 다이얼로그 후 삭제. 삭제해도 스탯은 유지</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div style="max-width:1200px; margin:20px auto 0;">
+    <div class="highlight-box">
+      <p><strong>&#x1F4A1; 수집 동기:</strong> 카드마다 고유 번호 + 레어도 시스템으로 "도감 채우기" 감성. 빈 슬롯(+)이 자연스럽게 포토카드 드로우로 유도합니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SECTION 6: 보상 모드 (확정 vs 랜덤)
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="section section-alt" id="reward-mode">
+  <div class="section-label">Section 05</div>
+  <div class="section-title">보상 모드 (확정 vs 랜덤)</div>
+  <div class="section-desc">모드 선택 바텀시트 &middot; 확률 분포 &middot; 등급별 애니메이션 &middot; Near-miss 연출</div>
+
+  <div class="spec-layout">
+    <!-- Phone: Mode Selection Bottom Sheet -->
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+      <div class="phone-header">
+        <div class="phone-header-back">&larr;</div>
+        <div class="phone-header-title">포토카드 만들기</div>
+      </div>
+      <div class="phone-body">
+        <!-- Dimmed background content -->
+        <div style="padding:20px; opacity:0.3;">
+          <div style="font-size:13px; font-weight:700; margin-bottom:8px;">컨셉: School Life</div>
+          <div style="height:60px; background:#F5F5F5; border-radius:12px;"></div>
+        </div>
+
+        <!-- Bottom Sheet -->
+        <div class="p-bottom-sheet">
+          <div class="p-sheet-handle"></div>
+          <div style="font-size:16px; font-weight:800; margin-bottom:4px;">보상 모드 선택</div>
+          <div style="font-size:12px; color:#999; margin-bottom:16px;">포토카드 생성 시 스탯 획득 방식을 선택하세요</div>
+
+          <!-- Guaranteed Mode -->
+          <div style="border:2px solid #333; border-radius:14px; padding:16px; margin-bottom:10px; background:#FAFAFA;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:15px; font-weight:800;">&#x2705; 확정 모드</span>
+              <span style="padding:3px 10px; border-radius:10px; font-size:11px; font-weight:700; background:#F0F0F0; color:#333;">안전</span>
+            </div>
+            <div style="font-size:13px; color:#666; margin-bottom:8px;">매 세션 고정 <strong>+8 스탯</strong> 획득</div>
+            <div style="display:flex; gap:6px;">
+              <span style="padding:3px 8px; border-radius:8px; font-size:10px; background:#E8E8E8; color:#444;">비주얼 +5</span>
+              <span style="padding:3px 8px; border-radius:8px; font-size:10px; background:#E8E8E8; color:#444;">매력 +2</span>
+              <span style="padding:3px 8px; border-radius:8px; font-size:10px; background:#E8E8E8; color:#444;">체력 +1</span>
+            </div>
+          </div>
+
+          <!-- Random Mode -->
+          <div style="border:1.5px solid var(--border); border-radius:14px; padding:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:15px; font-weight:800;">&#x1F3B0; 랜덤 모드</span>
+              <span style="padding:3px 10px; border-radius:10px; font-size:11px; font-weight:700; background:#FFF3E0; color:#E65100;">도전</span>
+            </div>
+            <div style="font-size:13px; color:#666; margin-bottom:8px;">평균 <strong>+9.2</strong> &middot; 최대 <strong>+23 잭팟!</strong></div>
+            <div style="display:flex; gap:4px; font-size:10px; color:#999;">
+              <span>Miss +2</span><span>&middot;</span>
+              <span>Normal +8</span><span>&middot;</span>
+              <span>Great +14</span><span>&middot;</span>
+              <span style="color:#E65100; font-weight:700;">Jackpot +23</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-content">
+
+      <!-- Guaranteed Mode Spec -->
+      <div class="spec-card">
+        <h4>&#x2705; 확정 모드 상세</h4>
+        <table class="spec-table">
+          <thead><tr><th>항목</th><th>값</th></tr></thead>
+          <tbody>
+            <tr><td>Total per session</td><td><strong>+8 고정</strong></td></tr>
+            <tr><td>메인 스탯 (비주얼)</td><td>+5</td></tr>
+            <tr><td>매력</td><td>+2</td></tr>
+            <tr><td>체력</td><td>+1</td></tr>
+            <tr><td>대상</td><td>모든 유저 (무료/유료 동일)</td></tr>
+            <tr><td>특징</td><td>예측 가능한 성장. 리스크 없음. 계획적 플레이어에 적합</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Random Mode Spec -->
+      <div class="spec-card">
+        <h4>&#x1F3B0; 랜덤 모드 확률 분포</h4>
+        <table class="spec-table">
+          <thead><tr><th>Grade</th><th>확률</th><th>메인</th><th>매력</th><th>체력</th><th>Total</th><th>EV 기여</th></tr></thead>
+          <tbody>
+            <tr style="color:#999;"><td><strong>Miss</strong></td><td>30%</td><td>+1</td><td>+1</td><td>+0</td><td>+2</td><td>0.6</td></tr>
+            <tr><td><strong>Normal</strong></td><td>35%</td><td>+5</td><td>+2</td><td>+1</td><td>+8</td><td>2.8</td></tr>
+            <tr style="color:#333; font-weight:600;"><td><strong>Great</strong></td><td>25%</td><td>+9</td><td>+3</td><td>+2</td><td>+14</td><td>3.5</td></tr>
+            <tr style="color:#111; font-weight:700;"><td><strong>Jackpot</strong></td><td>10%</td><td>+15</td><td>+6</td><td>+2</td><td>+23</td><td>2.3</td></tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:#F7F7F7; font-weight:700;">
+              <td colspan="5"></td>
+              <td><strong>EV</strong></td>
+              <td><strong>9.2</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+        <div style="margin-top:12px; font-size:13px; color:#666;">
+          EV(기대값) = 0.30&times;2 + 0.35&times;8 + 0.25&times;14 + 0.10&times;23 = <strong>9.2</strong><br>
+          확정 모드(8.0) 대비 <strong>+15%</strong> 높지만, Miss(30%) 리스크 존재
+        </div>
+      </div>
+
+      <!-- Animation Specs -->
+      <div class="spec-card">
+        <h4>&#x1F3AC; 등급별 애니메이션 스펙</h4>
+        <div style="margin-bottom:12px; padding:10px 14px; background:#FFF8E1; border:1px solid #FFE082; border-radius:8px; font-size:12px; color:#795548;">
+          ※ 아래 애니메이션 스펙은 초안이며, <strong>프론트엔드 담당자와 구현 가능 여부 및 세부 사항 상의가 필요합니다.</strong>
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>Grade</th><th>연출</th><th>Duration</th><th>효과음</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Miss</strong></td>
+              <td>카드 살짝 흔들림 + 회색 파티클. 숫자 fade-in (작게). 약간의 실망감 연출</td>
+              <td>800ms</td>
+              <td>낮은 톤 "뚜둥"</td>
+            </tr>
+            <tr>
+              <td><strong>Normal</strong></td>
+              <td>카드 등장 + 작은 반짝임. 숫자 카운트업 (0&rarr;8). 기본 축하</td>
+              <td>1200ms</td>
+              <td>밝은 "딩!" 사운드</td>
+            </tr>
+            <tr>
+              <td><strong>Great</strong></td>
+              <td>카드 회전 등장 + 골드 파티클 burst. 숫자 큰 카운트업 + 화면 진동. "Great!" 텍스트 팝업</td>
+              <td>2000ms</td>
+              <td>상승 멜로디 + 관중 환호</td>
+            </tr>
+            <tr>
+              <td><strong>Jackpot</strong></td>
+              <td>화면 플래시 &rarr; 카드 3D 회전 등장 &rarr; 무지개 파티클 폭발 &rarr; 숫자 크게 바운스 + 화면 셰이크. "JACKPOT!" 풀스크린 오버레이 (2초)</td>
+              <td>3500ms</td>
+              <td>드럼롤 &rarr; 팡파레 &rarr; 관중 열광</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Near-Miss Effect -->
+      <div class="spec-card">
+        <h4>&#x1F525; Near-Miss 연출 (심리 장치)</h4>
+        <div style="font-size:13px; color:#666; margin-bottom:16px;">
+          Miss 결과 시 30% 확률로 "Near-Miss" 연출 발동. 잠시 Great/Jackpot 결과가 보이다가 Miss로 확정되는 연출.
+          <strong>다음 시도에 대한 동기 부여</strong> 효과.
+        </div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">
+              <h5>스피너 시작 (600ms)</h5>
+              <p>Miss &rarr; Normal &rarr; Great &rarr; Jackpot 순서로 빠르게 로테이션</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-text">
+              <h5>감속 (800ms)</h5>
+              <p>Great 또는 Jackpot에서 잠시 멈추는 듯한 연출. 기대감 최고조</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-text">
+              <h5>최종 확정 (400ms)</h5>
+              <p>Miss로 슬라이드. "아쉽게 놓쳤어요!" 텍스트. 다음 도전 유도 CTA 강조</p>
+            </div>
+          </div>
+        </div>
+        <div class="highlight-box" style="margin-top:16px;">
+          <p><strong>윤리적 고려:</strong> Near-miss는 슬롯머신의 심리 기법. 과도한 과금 유도를 방지하기 위해 near-miss 연출은 세션당 최대 1회로 제한. 일일 과금 한도($50) 설정과 함께 운용.</p>
+        </div>
+      </div>
+      <!-- Comparison Table -->
+      <div class="spec-card">
+        <h4>&#x1F4CA; 모드 비교 요약</h4>
+        <table class="spec-table">
+          <thead><tr><th>항목</th><th>확정 모드</th><th>랜덤 모드</th></tr></thead>
+          <tbody>
+            <tr><td>세션당 스탯</td><td>+8 (고정)</td><td>+2 ~ +23 (EV 9.2)</td></tr>
+            <tr><td>A 등급까지 (무료 후)</td><td>~60 세션</td><td>~52 세션 (평균)</td></tr>
+            <tr><td>비용 (A까지)</td><td>~$19.80</td><td>~$17.82 (평균)</td></tr>
+            <tr><td>대상 유저</td><td>안전 선호, 계획적 플레이어</td><td>모험 선호, 즐거움 추구 플레이어</td></tr>
+            <tr><td>심리적 효과</td><td>안정감, 예측 가능</td><td>기대감, 도파민, 재방문 동기</td></tr>
+            <tr><td>비즈니스 효과</td><td>안정적 과금</td><td>더 높은 재방문율, 변동 매출</td></tr>
+          </tbody>
+        </table>
+        <div class="highlight-box" style="margin-top:12px;">
+          <p>※ 결제 금액은 테스트용 예시입니다. 실제 가격은 결제 전환율 데이터를 기반으로 조정됩니다.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SECTION 7: 스탯 부여 로직
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="stat-logic">
+  <div class="section-label">Section 06</div>
+  <div class="section-title">스탯 부여 로직</div>
+  <div class="section-desc">콘텐츠 타입별 매핑 &middot; 스탯 누적 &middot; 등급 재계산</div>
+
+  <div class="spec-layout reverse">
+    <div class="spec-content">
+
+      <!-- Content-to-Stat Mapping -->
+      <div class="spec-card">
+        <h4>&#x1F4CB; 콘텐츠 타입별 스탯 매핑</h4>
+        <table class="spec-table">
+          <thead><tr><th>콘텐츠</th><th>메인 스탯</th><th>서브1: 매력</th><th>서브2: 체력</th><th>확정 합계</th></tr></thead>
+          <tbody>
+            <tr><td><strong>포토카드</strong></td><td>비주얼 +5</td><td>매력 +2</td><td>체력 +1</td><td>+8</td></tr>
+            <tr><td><strong>측면 이미지</strong></td><td>비주얼 +5</td><td>매력 +2</td><td>체력 +1</td><td>+8</td></tr>
+            <tr><td><strong>전신 이미지</strong></td><td>비주얼 +5</td><td>매력 +2</td><td>체력 +1</td><td>+8</td></tr>
+            <tr><td style="color:#999;">보이스 &#x1F512;</td><td>보컬 +5</td><td>매력 +2</td><td>체력 +1</td><td>+8</td></tr>
+            <tr><td style="color:#999;">안무 &#x1F512;</td><td>댄스 +5</td><td>매력 +2</td><td>체력 +1</td><td>+8</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px; font-size:13px; color:#666;">
+          <strong>참고:</strong> 무료/유료 구분 없이 동일한 스탯 부여 (확정 모드 기준 +8)<br>
+          포토카드 (유일한 활성 콘텐츠): 비주얼 +5, 매력 +2, 체력 +1 = +8<br>
+          <em>※ 측면/전신 이미지는 Sprint 6에서 해금 예정</em>
+        </div>
+      </div>
+
+
+      <!-- Core Rules -->
+      <div class="spec-card">
+        <h4>&#x1F4DC; 핵심 규칙 요약</h4>
+        <table class="spec-table">
+          <thead><tr><th>규칙</th><th>상세</th></tr></thead>
+          <tbody>
+            <tr><td><strong>스탯은 누적만 됨</strong></td><td>절대 감소하지 않음. 패널티 없음. 어떤 상황에서도 스탯을 깎지 않음</td></tr>
+            <tr><td><strong>등급은 total_stat 기반</strong></td><td>개별 스탯이 아닌 전체 합으로 등급 결정</td></tr>
+            <tr><td><strong>등급 강등 없음</strong></td><td>한 번 올라간 등급은 절대 내려가지 않음 (스탯 감소가 없으므로 자동 보장)</td></tr>
+            <tr><td><strong>Cap 초과분 소멸</strong></td><td>200 cap에 의한 초과분은 사라짐. 다른 스탯으로 이전 불가</td></tr>
+            <tr><td><strong>등급 재계산 타이밍</strong></td><td>콘텐츠 생성 후 스탯 부여 시에만 발생. 별도 cron/batch 없음</td></tr>
+            <tr><td><strong>서버 authoritative</strong></td><td>모든 스탯 계산/부여는 서버에서만. 클라이언트는 표시만</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Grade-Up Unlock Table -->
+      <div class="spec-card">
+        <h4>&#x1F513; 등급별 해금 콘텐츠</h4>
+        <table class="spec-table">
+          <thead><tr><th>등급</th><th>해금 내용</th><th>동기 부여</th></tr></thead>
+          <tbody>
+            <tr><td><span class="grade grade-sm grade-f">F</span> 연습생</td><td>기본 컨셉 3종 (School Life, Finger Heart, Daily)</td><td>빠른 탈출 유도</td></tr>
+            <tr><td><span class="grade grade-sm grade-d">D</span> 신인</td><td>Random 컨셉 해금 + 컬렉션 기능</td><td>무료 달성 목표</td></tr>
+            <tr><td><span class="grade grade-sm grade-c">C</span> 루키</td><td>차트 참여 + 다른 유저 대결</td><td>소셜 기능 해금으로 과금 유도</td></tr>
+            <tr><td><span class="grade grade-sm grade-b">B</span> 인기</td><td>특별 컨셉 (시즌 한정) + 콜라보 컨셉</td><td>헤비 유저 보상</td></tr>
+            <tr><td><span class="grade grade-sm grade-a">A</span> 톱</td><td>데뷔 무대 연출 + 한정 포토카드 + 프리미엄 프레임</td><td>최종 목표</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Edge Cases -->
+      <div class="spec-card">
+        <h4>&#x26A0; 엣지 케이스</h4>
+        <table class="spec-table">
+          <thead><tr><th>Case</th><th>처리</th></tr></thead>
+          <tbody>
+            <tr><td>모든 Active 스탯 200 cap</td><td>생성 가능, 스탯 +0. "MAX 달성" 뱃지 표시</td></tr>
+            <tr><td>Jackpot + 일부 cap 도달</td><td>개별 cap 적용. UI에 "(capped)" 표시</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Phone: Stat Result Animation -->
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>&#x1F4F6; &#x1F50B;</span></div>
+      <div class="phone-body" style="padding:30px 20px;">
+        <!-- Jackpot Result -->
+        <div style="text-align:center; margin-bottom:20px;">
+          <div style="font-size:11px; color:#999; letter-spacing:2px; font-weight:600;">RANDOM MODE</div>
+          <div style="font-size:48px; margin:8px 0;">&#x1F389;</div>
+          <div style="font-size:24px; font-weight:900; color:#111; letter-spacing:-1px;">JACKPOT!</div>
+        </div>
+
+        <!-- Big stat number -->
+        <div style="text-align:center; margin-bottom:24px;">
+          <div style="font-size:64px; font-weight:900; color:#111; line-height:1;">+23</div>
+          <div style="font-size:13px; color:#999; margin-top:4px;">스탯 획득</div>
+        </div>
+
+        <!-- Stat breakdown -->
+        <div style="background:#F7F7F7; border-radius:14px; padding:16px; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-around; text-align:center;">
+            <div>
+              <div style="font-size:11px; color:#999;">비주얼</div>
+              <div style="font-size:20px; font-weight:900; color:#333;">+15</div>
+            </div>
+            <div style="width:1px; background:#E0E0E0;"></div>
+            <div>
+              <div style="font-size:11px; color:#999;">매력</div>
+              <div style="font-size:20px; font-weight:900; color:#555;">+6</div>
+            </div>
+            <div style="width:1px; background:#E0E0E0;"></div>
+            <div>
+              <div style="font-size:11px; color:#999;">체력</div>
+              <div style="font-size:20px; font-weight:900; color:#666;">+2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grade progress -->
+        <div style="background:#F7F7F7; border-radius:14px; padding:14px; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="grade grade-sm grade-d">D</span>
+              <span style="font-size:12px; color:#999;">&rarr;</span>
+              <span class="grade grade-sm grade-d">D</span>
+            </div>
+            <span style="font-size:11px; color:#999;">92 / 150</span>
+          </div>
+          <div class="p-progress-bar"><div class="p-progress-fill" style="width:61%;"></div></div>
+          <div style="font-size:10px; color:#999; margin-top:4px;">C등급까지 58 스탯 더 필요</div>
+        </div>
+
+        <!-- CTA -->
+        <div class="p-btn">확인</div>
+        <div style="text-align:center; margin-top:12px;">
+          <span style="font-size:12px; color:#999; text-decoration:underline;">컬렉션 카드보기</span>
+        </div>
+      </div>
+      <div class="phone-nav">
+        <div class="phone-nav-item"><span>&#x1F3E0;</span>홈</div>
+        <div class="phone-nav-item"><span>&#x1F50D;</span>발견</div>
+        <div class="phone-nav-item active"><span>&#x1F465;</span>내그룹</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<div style="padding:60px; text-align:center; border-top:1px solid var(--border); background:#FAFAFA;">
+  <div style="font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#999; margin-bottom:8px;">AIdol Phase 2 &middot; Sprint 5</div>
+  <div style="font-size:24px; font-weight:900; margin-bottom:8px;">육성 시스템 기능명세서</div>
+  <div style="font-size:13px; color:#999; margin-bottom:24px;">기능명세 v1.0 &middot; 2026.03.17 &middot; Author: mijin</div>
+  <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+    <span class="tag tag-gray">6 Sections</span>
+    <span class="tag tag-gray">13 API Endpoints</span>
+    <span class="tag tag-gray">6 Stats</span>
+    <span class="tag tag-gray">5 Grades</span>
+    <span class="tag tag-gray">4 Concepts</span>
+    <span class="tag tag-gray">2 Reward Modes</span>
+  </div>
+</div>
+
+<style>
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+  }
+</style>
+
+</body>
+</html>
