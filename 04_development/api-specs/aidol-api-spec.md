@@ -25,6 +25,12 @@
 | `/aidol-highlights`                                 | GET    | 아이돌 하이라이트 조회   | Public | 2      |
 | `/aidol-highlights/{id}/messages`                   | GET    | 하이라이트 메세지 조회   | Public | 2      |
 | `/aidol-feeds`                                      | GET    | 피드 콘텐츠 목록 조회    | Public | 4      |
+| `/companions/{id}/credits`                          | GET    | 연습 크레딧 조회         | Cookie | 5      |
+| `/me/credits/recharge`                              | POST   | 충전 크레딧 지급         | Cookie | 5      |
+| `/companions/{id}/photocards`                       | POST   | 포토카드 생성            | Cookie | 5      |
+| `/me/photocards`                                    | GET    | 포토카드 컬렉션 조회     | Cookie | 5      |
+| `/me/photocards/{id}`                               | GET    | 포토카드 상세 조회       | Cookie | 5      |
+| `/me/photocards/{id}`                               | DELETE | 포토카드 삭제            | Cookie | 5      |
 | `/companion-relationships`                          | GET    | 아이돌 관계 조회         | Public | 2      |
 | `/companion-relationships/{id}`                     | GET    | 아이돌 관계 조회         | Public | 2      |
 | `/companion-relationships`                          | POST   | 아이돌 관계성 생성       | Public | 2      |
@@ -305,7 +311,7 @@ Query Parameters (공통 List 규칙)
       "aidolId": "string",
       "name": "string",
       "gender": "MALE|FEMALE",
-      "grade": "A|B|C|F",
+      "grade": "F|D|C|B|A",
       "biography": "string",
       "profilePictureUrl": "string",
       "position": "LEADER|MAIN_VOCAL|SUB_VOCAL|...",
@@ -376,6 +382,11 @@ attach는 PATCH /companions/{id}로 수행됩니다.
 - URL: GET /companions/{id}
 - Auth: 공개
 
+Sprint 5 변경사항:
+
+- `stats` 최대값은 각 항목별 `0~200`입니다.
+- `grade`는 클라이언트 입력값이 아니라 서버 계산값이며, `stats` 합계 기준 `F | D | C | B | A`를 사용합니다.
+
 **Response** (200 OK): 
 
 ```json
@@ -407,6 +418,11 @@ attach는 PATCH /companions/{id}로 수행됩니다.
 
 연습생을 생성 과정에서 정보를 업데이트 합니다.
 
+Sprint 5 변경사항:
+
+- `grade`는 요청으로 받지 않으며 서버가 `stats` 합계 기준으로 계산합니다.
+- `stats` 각 항목의 허용 범위는 `0~200`입니다.
+
 **Request**:
 
 ```json
@@ -414,7 +430,6 @@ attach는 PATCH /companions/{id}로 수행됩니다.
   "aidolId": "aidol-uuid...",
   "name": "멤버 이름",
   "gender": "FEMALE",
-  "grade": "A",
   "biography": "어릴 때부터...",
   "profilePictureUrl": "...",
   "position": "MAIN_VOCAL",
@@ -424,10 +439,10 @@ attach는 PATCH /companions/{id}로 수행됩니다.
   "mbtiJudgment": 7,
   "mbtiLifestyle": 2,
   "stats": {
-    "vocal": 90,
+    "vocal": 120,
     "dance": 80,
     "rap": 20,
-    "visual": 85,
+    "visual": 135,
     "stamina": 70,
     "charm": 95
   }
@@ -443,7 +458,8 @@ attach는 PATCH /companions/{id}로 수행됩니다.
     "aidolId": "...",
     "name": "멤버 이름",
     "mbti": "ESTP",
-    "stats": { "vocal": 90, ... },
+    "grade": "B",
+    "stats": { "vocal": 120, ... },
     "status": "PUBLISHED",
     "createdAt": "..."
   }
@@ -469,7 +485,7 @@ attach는 PATCH /companions/{id}로 수행됩니다.
     "aidolId": null,
     "name": "Minji",
     "gender": "FEMALE",
-    "grade": "S",
+    "grade": "A",
     "mbti": "ENTP",
     "stats": { "vocal": 100, "dance": 90, "rap": 80, "visual": 100, "stamina": 80, "charm": 95 }
   },
@@ -990,6 +1006,243 @@ URL: POST /chatrooms/{id}/companions/{cid}/initial-response
 
 ---
 
+### GET /companions/{id}/credits - 연습 크레딧 조회
+
+특정 멤버 기준 연습 크레딧 잔여량을 조회합니다. 무료 크레딧은 멤버별/콘텐츠 타입별로 계산하고, 충전 크레딧은 사용자 단위 공유 풀로 계산합니다.
+
+- URL: GET /companions/{id}/credits
+- Auth: Cookie 필수 (`aioia_anonymous_id`)
+
+Query Parameters
+
+- `contentType` (required): `PHOTOCARD`
+
+**Response** (200 OK):
+
+```json
+{
+  "data": {
+    "companionId": "companion-uuid",
+    "contentType": "PHOTOCARD",
+    "freeCreditsRemaining": 2,
+    "paidCreditsRemaining": 3,
+    "nextRechargeAvailableAt": null
+  }
+}
+```
+
+**Errors**:
+
+- `400` - 지원하지 않는 `contentType`
+- `404` - Companion 없음
+
+---
+
+### POST /me/credits/recharge - 크레딧 충전
+
+사용자 단위 공유 충전 크레딧을 지급합니다. Sprint 5에서는 기간 한정 무료 충전으로 1회 충전 시 3크레딧을 지급합니다.
+
+- URL: POST /me/credits/recharge
+- Auth: Cookie 필수 (`aioia_anonymous_id`)
+
+**Request**:
+
+```json
+{}
+```
+
+**Response** (200 OK):
+
+```json
+{
+  "data": {
+    "grantedCredits": 3,
+    "paidCreditsRemaining": 3,
+    "nextRechargeAvailableAt": "2026-03-26T03:00:00Z"
+  }
+}
+```
+
+**Errors**:
+
+- `409` - 아직 충전 쿨다운이 끝나지 않음 (`meta.nextRechargeAvailableAt` 포함)
+
+---
+
+### POST /companions/{id}/photocards - 포토카드 생성
+
+특정 멤버의 포토카드를 생성합니다. 생성 성공 시 스탯이 즉시 반영되며, 서버는 `trainings`, `photocard_trainings`, `credits`, `training_credits` 레코드를 함께 기록합니다.
+
+- URL: POST /companions/{id}/photocards
+- Auth: Cookie 필수 (`aioia_anonymous_id`)
+
+동작 원리:
+
+1. 멤버의 현재 등급과 연습 가능 여부를 확인합니다.
+2. 멤버별 무료 크레딧과 사용자 공유 충전 크레딧을 순서대로 확인합니다.
+3. 서버는 먼저 `PENDING` training을 생성하고, API 응답에는 완료된 결과만 반환합니다.
+4. AI 이미지 생성 성공 후 스탯/등급을 갱신하고 결과를 저장합니다.
+5. 실패 시 크레딧은 차감하지 않거나, 이미 차감되었으면 동일 training에 대해 refund credit을 기록합니다.
+
+**Request**:
+
+```json
+{
+  "concept": "SCHOOL_LIFE",
+  "drawMode": "FIXED"
+}
+```
+
+- `concept`: `SCHOOL_LIFE | FINGER_HEART | DAILY | RANDOM`
+- `drawMode`: `FIXED | RANDOM`
+- `concept = RANDOM`은 `grade >= D` 멤버에게만 허용됩니다.
+
+**Response** (201 Created):
+
+```json
+{
+  "data": {
+    "id": "photocard-uuid",
+    "companionId": "companion-uuid",
+    "concept": "SCHOOL_LIFE",
+    "drawMode": "FIXED",
+    "imageUrl": "https://cdn.example.com/photocards/photo-1.png",
+    "serialNumber": "PC-20260325-000123",
+    "resultGrade": null,
+    "isNearMiss": false,
+    "statDelta": {
+      "vocal": 0,
+      "dance": 0,
+      "rap": 0,
+      "visual": 5,
+      "stamina": 1,
+      "charm": 2
+    },
+    "totalStatDelta": 8,
+    "currentStats": {
+      "vocal": 120,
+      "dance": 80,
+      "rap": 20,
+      "visual": 135,
+      "stamina": 71,
+      "charm": 97
+    },
+    "currentGrade": "A",
+    "createdAt": "2026-03-25T03:00:00Z"
+  }
+}
+```
+
+설명:
+
+- `resultGrade`는 `drawMode = FIXED`일 때 `null`입니다.
+- `resultGrade`는 `drawMode = RANDOM`일 때 `MISS | NORMAL | GREAT | JACKPOT` 중 하나입니다.
+- Sprint 5에서 실질적으로 증가하는 스탯은 `visual`, `charm`, `stamina`입니다.
+
+**Errors**:
+
+- `409` - 무료/충전 크레딧 모두 소진됨
+- `409` - `F` 등급 멤버가 `RANDOM` 컨셉을 선택함
+- `500` - AI 생성 실패 (크레딧 차감 없음 또는 자동 환불)
+
+---
+
+### GET /me/photocards - 포토카드 컬렉션 조회
+
+현재 사용자가 보유한 포토카드 컬렉션을 조회합니다. soft delete 된 카드는 제외하며, 최신 생성 순으로 반환합니다. 컬렉션 그리드 렌더링에 필요한 요약 정보만 제공하며, 획득 스탯 상세는 `GET /me/photocards/{id}`에서 조회합니다.
+
+- URL: GET /me/photocards
+- Auth: Cookie 필수 (`aioia_anonymous_id`)
+
+Query Parameters (공통 List 규칙)
+
+- `current`, `pageSize`, `sort`, `filters`
+- 기본 정렬: `createdAt desc`, `id desc`
+- 대표 `filters` 예시:
+  - `[{"field":"companionId","operator":"eq","value":"companion-uuid"}]`
+  - `[{"field":"concept","operator":"eq","value":"SCHOOL_LIFE"}]`
+
+**Response** (200 OK):
+
+```json
+{
+  "data": [
+    {
+      "id": "photocard-uuid-1",
+      "companionId": "companion-uuid",
+      "concept": "SCHOOL_LIFE",
+      "imageUrl": "https://cdn.example.com/photocards/photo-1.png",
+      "resultGrade": "NORMAL",
+      "isNew": true,
+      "createdAt": "2026-03-25T03:00:00Z"
+    }
+  ],
+  "total": 1
+}
+```
+
+**Errors**:
+
+- `400` - 잘못된 쿼리 파라미터 형식
+
+---
+
+### GET /me/photocards/{id} - 포토카드 상세 조회
+
+포토카드 상세 화면 진입 시 필요한 단건 데이터를 조회합니다. 페이지 새로고침 또는 URL 직접 접근 시에도 동일한 화면을 복원할 수 있도록 제공합니다.
+
+- URL: GET /me/photocards/{id}
+- Auth: Cookie 필수 (`aioia_anonymous_id`)
+
+**Response** (200 OK):
+
+```json
+{
+  "data": {
+    "id": "photocard-uuid-1",
+    "companionId": "companion-uuid",
+    "companionName": "test",
+    "concept": "SCHOOL_LIFE",
+    "imageUrl": "https://cdn.example.com/photocards/photo-1.png",
+    "resultGrade": "NORMAL",
+    "totalStatDelta": 8,
+    "statDelta": {
+      "vocal": 0,
+      "dance": 0,
+      "rap": 0,
+      "visual": 5,
+      "stamina": 1,
+      "charm": 2
+    },
+    "isNew": true,
+    "createdAt": "2026-03-25T03:00:00Z"
+  }
+}
+```
+
+**Errors**:
+
+- `403` - 본인 소유 포토카드가 아님
+- `404` - 포토카드 없음
+
+---
+
+### DELETE /me/photocards/{id} - 포토카드 삭제
+
+포토카드를 컬렉션에서 삭제합니다. soft delete로 처리하며, 해당 포토카드 생성으로 획득한 스탯은 유지됩니다.
+
+- URL: DELETE /me/photocards/{id}
+- Auth: Cookie 필수 (`aioia_anonymous_id`)
+
+**Response** (204 No Content)
+
+**Errors**:
+
+- `403` - 본인 소유 포토카드가 아님
+- `404` - 포토카드 없음
+
+---
+
 ## 데이터 모델
 
 ### AIdol
@@ -1018,22 +1271,118 @@ URL: POST /chatrooms/{id}/companions/{cid}/initial-response
   aidolId: string | null            // 소속된 AIdol 그룹 ID (없으면 null)
   name: string | null               // 이름
   gender: string | null             // 성별 (Gender Enum 참고)
-  grade: string | null              // 등급 (Grade Enum 참고)
+  grade: "F" | "D" | "C" | "B" | "A" | null // stats 합계 기반 등급
   biography: string | null          // 자기소개/설정
   profilePictureUrl: string | null  // 프로필 이미지 URL
   position: string | null           // 포지션 (Position Enum 참고)
   status: string | null             // DRAFT | PUBLISHED
   mbti: string | null               // 계산된 MBTI (예: "ENTP")
   stats: {                          // 능력치 객체
-    vocal: number     // 0~100 (보컬)
-    dance: number     // 0~100 (댄스)
-    rap: number       // 0~100 (랩)
-    visual: number    // 0~100 (비주얼)
-    stamina: number   // 0~100 (체력)
-    charm: number     // 0~100 (매력)
+    vocal: number     // 0~200 (보컬)
+    dance: number     // 0~200 (댄스)
+    rap: number       // 0~200 (랩)
+    visual: number    // 0~200 (비주얼)
+    stamina: number   // 0~200 (체력)
+    charm: number     // 0~200 (매력)
   }
   createdAt: string                 // ISO 8601 datetime
   updatedAt: string                 // ISO 8601 datetime
+}
+```
+
+- Sprint 5부터 `grade`는 `stats` 평균이 아니라 합계 기준으로 계산합니다.
+
+### CompanionCreditBalance
+
+```tsx
+{
+  companionId: string               // 조회 대상 멤버 ID
+  contentType: "PHOTOCARD"          // 무료 횟수를 계산할 콘텐츠 타입
+  freeCreditsRemaining: number      // 0~3, 해당 멤버/콘텐츠 타입 기준 남은 무료 횟수
+  paidCreditsRemaining: number      // 사용자 단위 공유 충전 크레딧 잔여량
+  nextRechargeAvailableAt: string | null // 다음 충전 가능 시각, 쿨다운이 없으면 null
+}
+```
+
+### CreditRechargeResult
+
+```tsx
+{
+  grantedCredits: number            // 이번 충전으로 지급된 크레딧 수, Sprint 5는 항상 3
+  paidCreditsRemaining: number      // 충전 직후 사용자 공유 충전 크레딧 잔여량
+  nextRechargeAvailableAt: string   // 다음 충전 가능 시각 (ISO 8601 datetime)
+}
+```
+
+### PhotocardCreateResult
+
+```tsx
+{
+  id: string                        // 포토카드 식별자
+  companionId: string               // 포토카드 대상 멤버 ID
+  concept: "SCHOOL_LIFE" | "FINGER_HEART" | "DAILY" | "RANDOM" // 선택한 포토카드 컨셉
+  drawMode: "FIXED" | "RANDOM"      // 보상 모드
+  imageUrl: string | null           // 생성된 포토카드 이미지 URL
+  serialNumber: string | null       // 카드 고유 시리얼 번호, 생성 완료 전에는 null 가능
+  resultGrade: "MISS" | "NORMAL" | "GREAT" | "JACKPOT" | null // RANDOM 모드 결과 등급, FIXED면 null
+  isNearMiss: boolean               // Near-Miss 연출 발동 여부
+  statDelta: {
+    vocal: number                   // 이번 생성으로 증가한 보컬 수치
+    dance: number                   // 이번 생성으로 증가한 댄스 수치
+    rap: number                     // 이번 생성으로 증가한 랩 수치
+    visual: number                  // 이번 생성으로 증가한 비주얼 수치
+    stamina: number                 // 이번 생성으로 증가한 체력 수치
+    charm: number                   // 이번 생성으로 증가한 매력 수치
+  }
+  totalStatDelta: number            // 이번 생성으로 획득한 총 스탯 합계
+  currentStats: {
+    vocal: number                   // 생성 직후 멤버의 현재 보컬 수치
+    dance: number                   // 생성 직후 멤버의 현재 댄스 수치
+    rap: number                     // 생성 직후 멤버의 현재 랩 수치
+    visual: number                  // 생성 직후 멤버의 현재 비주얼 수치
+    stamina: number                 // 생성 직후 멤버의 현재 체력 수치
+    charm: number                   // 생성 직후 멤버의 현재 매력 수치
+  }
+  currentGrade: "F" | "D" | "C" | "B" | "A" // 생성 직후 멤버의 현재 등급
+  createdAt: string                 // 생성 시각 (ISO 8601 datetime)
+}
+```
+
+### PhotocardCollectionItem
+
+```tsx
+{
+  id: string                        // 포토카드 식별자
+  companionId: string               // 포토카드 대상 멤버 ID
+  concept: "SCHOOL_LIFE" | "FINGER_HEART" | "DAILY" | "RANDOM" // 포토카드 컨셉
+  imageUrl: string                  // 포토카드 이미지 URL
+  resultGrade: "MISS" | "NORMAL" | "GREAT" | "JACKPOT" | null // 생성 시 보상 등급
+  isNew: boolean                    // createdAt 기준 24시간 이내 여부
+  createdAt: string                 // 생성 시각 (ISO 8601 datetime)
+}
+```
+
+### PhotocardDetail
+
+```tsx
+{
+  id: string                        // 포토카드 식별자
+  companionId: string               // 포토카드 대상 멤버 ID
+  companionName: string | null      // 포토카드 대상 멤버 이름
+  concept: "SCHOOL_LIFE" | "FINGER_HEART" | "DAILY" | "RANDOM" // 포토카드 컨셉
+  imageUrl: string                  // 포토카드 이미지 URL
+  resultGrade: "MISS" | "NORMAL" | "GREAT" | "JACKPOT" | null // 생성 시 보상 등급
+  totalStatDelta: number            // 이번 생성으로 획득한 총 스탯 합계
+  statDelta: {
+    vocal: number                   // 이번 생성으로 증가한 보컬 수치
+    dance: number                   // 이번 생성으로 증가한 댄스 수치
+    rap: number                     // 이번 생성으로 증가한 랩 수치
+    visual: number                  // 이번 생성으로 증가한 비주얼 수치
+    stamina: number                 // 이번 생성으로 증가한 체력 수치
+    charm: number                   // 이번 생성으로 증가한 매력 수치
+  }
+  isNew: boolean                    // createdAt 기준 24시간 이내 여부
+  createdAt: string                 // 생성 시각 (ISO 8601 datetime)
 }
 ```
 
@@ -1142,6 +1491,7 @@ URL: POST /chatrooms/{id}/companions/{cid}/initial-response
 - `GET /aidol-highlights`
 - `GET /companion-relationships`
 - `GET /aidol-feeds`
+- `GET /me/photocards`
 
 비적용 endpoint:
 
@@ -1192,14 +1542,32 @@ URL: POST /chatrooms/{id}/companions/{cid}/initial-response
 
 ```
 
+상태 기반 에러는 추가 정보를 위해 `meta` 객체를 포함할 수 있습니다.
+
+```json
+{
+  "status": 409,
+  "detail": "아직 충전할 수 없습니다.",
+  "code": "CREDIT_RECHARGE_COOLDOWN",
+  "meta": {
+    "nextRechargeAvailableAt": "2026-03-26T03:00:00Z"
+  }
+}
+```
+
 ### Error Codes (현재 구현 기준)
 
 | Code                            | HTTP Status | 설명                                                          |
 | ------------------------------- | ----------- | ------------------------------------------------------------- |
 | `VALIDATION_ERROR`              | 422         | 요청 바디/필드 검증 실패                                      |
 | `INVALID_QUERY_PARAMS`          | 400         | `sort`, `filters` 쿼리 파라미터 JSON 형식 오류                |
+| `UNSUPPORTED_CONTENT_TYPE`      | 400         | 현재 지원하지 않는 콘텐츠 타입을 요청함                       |
+| `FORBIDDEN_RESOURCE`            | 403         | 요청 리소스에 대한 접근 권한 없음                             |
 | `RESOURCE_NOT_FOUND`            | 404         | 요청한 리소스 없음                                            |
 | `FIRST_RESPONSE_ALREADY_EXISTS` | 409         | `initial-response` API에서 이미 메시지가 존재하는 채팅방 요청 |
+| `INSUFFICIENT_TRAINING_CREDITS` | 409         | 무료 크레딧과 충전 크레딧이 모두 부족함                       |
+| `TRAINING_CONTENT_LOCKED`       | 409         | 현재 등급/조건에서 선택한 연습 콘텐츠를 사용할 수 없음        |
+| `CREDIT_RECHARGE_COOLDOWN`      | 409         | 충전 쿨다운이 끝나지 않아 재충전할 수 없음                    |
 | `BadRequestError`               | 400         | LLM 공급자 요청 오류                                          |
 | `RateLimitError`                | 429         | LLM 공급자 호출 한도 초과                                     |
 | `ServiceUnavailableError`       | 503         | LLM 공급자 서비스 일시 장애                                   |
