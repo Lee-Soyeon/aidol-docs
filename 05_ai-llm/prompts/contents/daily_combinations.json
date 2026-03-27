@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "prompt_type": "daily",
+    "prompt_file": "daily_prompt.py",
+    "description": "daily 콘텐츠 프롬프트 실험용 조합 세트",
+    "total_combinations": 8,
+    "note": "scene: convenience_store/parking_lot/bedroom | gaze: glance_left/blank_right | expression: neutral/tired/soft_smile/blank/curious | outfit: graphic_tee/black_tee/hoodie/knit_sweater | camera: eye_level/low_angle/high_angle/closeup_crop/medium_wide/side_profile | atmosphere: candid/ambient_light/lo_fi/late_night"
+  },
+  "combinations": [
+    {
+      "id": "D-001",
+      "label": "편의점 · 그래픽티 · 음료 마시기",
+      "scene": "convenience_store",
+      "gaze": "glance_left",
+      "expression": "neutral",
+      "outfit": "graphic_tee",
+      "camera": "eye_level",
+      "atmosphere": "candid"
+    },
+    {
+      "id": "D-002",
+      "label": "편의점 · 블랙티+와이드데님 · 음료 마시기",
+      "scene": "convenience_store",
+      "gaze": "glance_left",
+      "expression": "tired",
+      "outfit": "black_tee",
+      "camera": "low_angle",
+      "atmosphere": "ambient_light"
+    },
+    {
+      "id": "D-003",
+      "label": "편의점 · 후디+흰티 · 음료 마시기",
+      "scene": "convenience_store",
+      "gaze": "blank_right",
+      "expression": "soft_smile",
+      "outfit": "hoodie",
+      "camera": "high_angle",
+      "atmosphere": "lo_fi"
+    },
+    {
+      "id": "D-004",
+      "label": "주차장 · 니트 · 벽 기대기",
+      "scene": "parking_lot",
+      "gaze": "glance_left",
+      "expression": "blank",
+      "outfit": "knit_sweater",
+      "camera": "closeup_crop",
+      "atmosphere": "late_night"
+    },
+    {
+      "id": "D-005",
+      "label": "주차장 · 그래픽티 · 벽 기대기",
+      "scene": "parking_lot",
+      "gaze": "blank_right",
+      "expression": "curious",
+      "outfit": "graphic_tee",
+      "camera": "medium_wide",
+      "atmosphere": "candid"
+    },
+    {
+      "id": "D-006",
+      "label": "주차장 · 블랙티+와이드데님 · 벽 기대기",
+      "scene": "parking_lot",
+      "gaze": "blank_right",
+      "expression": "neutral",
+      "outfit": "black_tee",
+      "camera": "side_profile",
+      "atmosphere": "ambient_light"
+    },
+    {
+      "id": "D-007",
+      "label": "침실 · 후디+흰티 · 폰 스크롤",
+      "scene": "bedroom",
+      "gaze": "glance_left",
+      "expression": "tired",
+      "outfit": "hoodie",
+      "camera": "eye_level",
+      "atmosphere": "lo_fi"
+    },
+    {
+      "id": "D-008",
+      "label": "침실 · 니트 · 폰 스크롤",
+      "scene": "bedroom",
+      "gaze": "glance_left",
+      "expression": "soft_smile",
+      "outfit": "knit_sweater",
+      "camera": "low_angle",
+      "atmosphere": "late_night"
+    }
+  ]
+}

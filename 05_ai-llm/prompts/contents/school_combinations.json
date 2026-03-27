@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "prompt_type": "school",
+    "prompt_file": "school_prompt.py",
+    "description": "school 콘텐츠 프롬프트 실험용 조합 세트",
+    "total_combinations": 8,
+    "note": "scene: classroom/hallway/stairway/rooftop/convenience_store | gaze: down_smile/side_playful/off_camera/away_shy/soft_contact | expression: soft_smile/amused/shy_smile/bright_eyes/subtle_laugh | outfit: cardigan_shirt/blazer_shirt/cardigan_tee/blazer_tee | camera: closeup_front/closeup_angle/medium_chest/medium_upper/high_angle/side_medium | atmosphere: bright_sticker/fluorescent_doodle/golden_nostalgic/overcast_relaxed"
+  },
+  "combinations": [
+    {
+      "id": "S-001",
+      "label": "교실 · 카디건+셔츠 · 쉬는시간",
+      "scene": "classroom",
+      "gaze": "down_smile",
+      "expression": "soft_smile",
+      "outfit": "cardigan_shirt",
+      "camera": "medium_chest",
+      "atmosphere": "bright_sticker"
+    },
+    {
+      "id": "S-002",
+      "label": "복도 · 블레이저+셔츠 · 장난기",
+      "scene": "hallway",
+      "gaze": "side_playful",
+      "expression": "amused",
+      "outfit": "blazer_shirt",
+      "camera": "closeup_angle",
+      "atmosphere": "fluorescent_doodle"
+    },
+    {
+      "id": "S-003",
+      "label": "계단 · 카디건+티셔츠 · 수줍은 미소",
+      "scene": "stairway",
+      "gaze": "away_shy",
+      "expression": "shy_smile",
+      "outfit": "cardigan_tee",
+      "camera": "medium_upper",
+      "atmosphere": "golden_nostalgic"
+    },
+    {
+      "id": "S-004",
+      "label": "옥상 · 블레이저+티셔츠 · 편안한 오후",
+      "scene": "rooftop",
+      "gaze": "off_camera",
+      "expression": "bright_eyes",
+      "outfit": "blazer_tee",
+      "camera": "side_medium",
+      "atmosphere": "overcast_relaxed"
+    },
+    {
+      "id": "S-005",
+      "label": "편의점 · 카디건+셔츠 · 음료 한 잔",
+      "scene": "convenience_store",
+      "gaze": "soft_contact",
+      "expression": "subtle_laugh",
+      "outfit": "cardigan_shirt",
+      "camera": "closeup_front",
+      "atmosphere": "bright_sticker"
+    },
+    {
+      "id": "S-006",
+      "label": "교실 · 블레이저+티셔츠 · 졸린 오후",
+      "scene": "classroom",
+      "gaze": "off_camera",
+      "expression": "amused",
+      "outfit": "blazer_tee",
+      "camera": "high_angle",
+      "atmosphere": "fluorescent_doodle"
+    },
+    {
+      "id": "S-007",
+      "label": "복도 · 카디건+티셔츠 · 노을빛",
+      "scene": "hallway",
+      "gaze": "down_smile",
+      "expression": "bright_eyes",
+      "outfit": "cardigan_tee",
+      "camera": "medium_chest",
+      "atmosphere": "golden_nostalgic"
+    },
+    {
+      "id": "S-008",
+      "label": "계단 · 블레이저+셔츠 · 하교길",
+      "scene": "stairway",
+      "gaze": "side_playful",
+      "expression": "soft_smile",
+      "outfit": "blazer_shirt",
+      "camera": "side_medium",
+      "atmosphere": "overcast_relaxed"
+    }
+  ]
+}
