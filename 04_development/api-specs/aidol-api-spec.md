@@ -1,4 +1,4 @@
-# AIdol API Specification
+﻿# AIdol API Specification
 
 - 원본: [Notion](https://www.notion.so/2f046f965504805ca766fd5d0850b3e7)
 - Base URL: `http://localhost:8000` (로컬)
@@ -1033,8 +1033,9 @@ Query Parameters
 
 **Errors**:
 
-- `400` - 지원하지 않는 `contentType`
-- `404` - Companion 없음
+- `400 INVALID_QUERY_PARAMS` - 지원하지 않는 `contentType`
+- `403 FORBIDDEN` - 본인 소유 멤버가 아님
+- `404 RESOURCE_NOT_FOUND` - Companion 없음
 
 ---
 
@@ -1145,6 +1146,16 @@ Query Parameters
 - `409` - `F` 등급 멤버가 `RANDOM` 컨셉을 선택함
 - `500` - AI 생성 실패 (크레딧 차감 없음 또는 자동 환불)
 
+구현 기준 에러 코드:
+
+- `404 RESOURCE_NOT_FOUND` - Companion 없음
+- `403 FORBIDDEN` - 본인 소유 멤버가 아님
+- `409 PHOTOCARD_CREDITS_EXHAUSTED` - 무료/충전 크레딧 모두 소진됨
+- `409 PHOTOCARD_REFERENCE_IMAGE_MISSING` - 멤버 프로필 이미지가 없어 포토카드 생성이 불가능함
+- `409 PHOTOCARD_UNSUPPORTED_CONCEPT` - 현재 지원하지 않는 포토카드 concept/drawMode 조합
+- `500 EXTERNAL_SERVICE_ERROR` - 이미지 생성 또는 업로드 실패
+- `500 RESOURCE_UPDATE_FAILED` - 멤버 스탯 반영 또는 롤백 실패
+
 ---
 
 ### GET /me/photocards - 포토카드 컬렉션 조회
@@ -1157,7 +1168,8 @@ Query Parameters
 Query Parameters (공통 List 규칙)
 
 - `current`, `pageSize`, `sort`, `filters`
-- 기본 정렬: `createdAt desc`, `id desc`
+- 서버 기본 정렬: `createdAt desc`, `id desc`
+- `sort` 파라미터를 보내더라도 현재 포토카드 컬렉션 API에서는 서버 기본 정렬만 사용합니다.
 - 대표 `filters` 예시:
   - `[{"field":"companionId","operator":"eq","value":"companion-uuid"}]`
   - `[{"field":"concept","operator":"eq","value":"SCHOOL_LIFE"}]`
@@ -1183,7 +1195,7 @@ Query Parameters (공통 List 규칙)
 
 **Errors**:
 
-- `400` - 잘못된 쿼리 파라미터 형식
+- `400 INVALID_QUERY_PARAMS` - 잘못된 쿼리 파라미터 형식
 
 ---
 
@@ -1222,8 +1234,8 @@ Query Parameters (공통 List 규칙)
 
 **Errors**:
 
-- `403` - 본인 소유 포토카드가 아님
-- `404` - 포토카드 없음
+- `403 FORBIDDEN` - 본인 소유 포토카드가 아님
+- `404 RESOURCE_NOT_FOUND` - 포토카드 없음
 
 ---
 
@@ -1238,8 +1250,8 @@ Query Parameters (공통 List 규칙)
 
 **Errors**:
 
-- `403` - 본인 소유 포토카드가 아님
-- `404` - 포토카드 없음
+- `403 FORBIDDEN` - 본인 소유 포토카드가 아님
+- `404 RESOURCE_NOT_FOUND` - 포토카드 없음
 
 ---
 
@@ -1561,17 +1573,18 @@ Query Parameters (공통 List 규칙)
 | ------------------------------- | ----------- | ------------------------------------------------------------- |
 | `VALIDATION_ERROR`              | 422         | 요청 바디/필드 검증 실패                                      |
 | `INVALID_QUERY_PARAMS`          | 400         | `sort`, `filters` 쿼리 파라미터 JSON 형식 오류                |
-| `UNSUPPORTED_CONTENT_TYPE`      | 400         | 현재 지원하지 않는 콘텐츠 타입을 요청함                       |
-| `FORBIDDEN_RESOURCE`            | 403         | 요청 리소스에 대한 접근 권한 없음                             |
+| `FORBIDDEN`                     | 403         | 요청 리소스에 대한 접근 권한 없음                             |
 | `RESOURCE_NOT_FOUND`            | 404         | 요청한 리소스 없음                                            |
 | `FIRST_RESPONSE_ALREADY_EXISTS` | 409         | `initial-response` API에서 이미 메시지가 존재하는 채팅방 요청 |
-| `INSUFFICIENT_TRAINING_CREDITS` | 409         | 무료 크레딧과 충전 크레딧이 모두 부족함                       |
-| `TRAINING_CONTENT_LOCKED`       | 409         | 현재 등급/조건에서 선택한 연습 콘텐츠를 사용할 수 없음        |
+| `PHOTOCARD_CREDITS_EXHAUSTED`   | 409         | 무료 크레딧과 충전 크레딧이 모두 부족함                       |
+| `PHOTOCARD_REFERENCE_IMAGE_MISSING` | 409     | 포토카드 생성에 필요한 멤버 프로필 이미지가 없음               |
+| `PHOTOCARD_UNSUPPORTED_CONCEPT` | 409         | 현재 지원하지 않는 포토카드 concept/drawMode 조합을 요청함     |
 | `CREDIT_RECHARGE_COOLDOWN`      | 409         | 충전 쿨다운이 끝나지 않아 재충전할 수 없음                    |
 | `BadRequestError`               | 400         | LLM 공급자 요청 오류                                          |
 | `RateLimitError`                | 429         | LLM 공급자 호출 한도 초과                                     |
 | `ServiceUnavailableError`       | 503         | LLM 공급자 서비스 일시 장애                                   |
 | `EXTERNAL_SERVICE_ERROR`        | 500         | 외부 서비스 연동 오류(공통 코드)                              |
+| `RESOURCE_UPDATE_FAILED`        | 500         | 리소스 갱신 또는 보상 롤백 처리에 실패함                      |
 | `INTERNAL_SERVER_ERROR`         | 500         | 예상치 못한 서버 오류                                         |
 
 
@@ -1582,3 +1595,5 @@ Query Parameters (공통 List 규칙)
 - **Swagger UI**: `/docs`
 - **ReDoc**: `/redoc`
 - **OpenAPI Spec**: `/openapi.json`
+
+
