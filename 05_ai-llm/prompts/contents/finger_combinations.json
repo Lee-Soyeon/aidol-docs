@@ -4,7 +4,7 @@
     "prompt_file": "finger_prompt.py",
     "description": "finger heart 콘텐츠 프롬프트 실험용 조합 세트",
     "total_combinations": 6,
-    "note": "scene: practice_room | gaze: downward/side_playful/eye_contact/up_dreamy | expression: gentle_smile/embarrassed/cheerful/playful_grin | outfit: varsity_jacket/striped_rugby/sleeveless_casual/hoodie_training | camera: closeup_front/waist_up/medium_chest/high_angle | atmosphere: idol_casual"
+    "note": "scene: practice_room | gaze: look_down/look_side/eye_contact | expression: gentle_smile/embarrassed/cheerful/playful_grin | outfit: varsity_jacket/striped_rugby_shirt/sleeveless_casual/training_hoodie | camera: front_closeup/waist_up/medium_chest/high_angle | atmosphere: idol_casual_snapshot"
   },
   "combinations": [
     {
@@ -14,28 +14,28 @@
       "gaze": "eye_contact",
       "expression": "gentle_smile",
       "outfit": "varsity_jacket",
-      "camera": "closeup_front",
-      "atmosphere": "idol_casual"
+      "camera": "front_closeup",
+      "atmosphere": "idol_casual_snapshot"
     },
     {
       "id": "F-002",
       "label": "연습실 · 럭비폴로 · 옆을보며 · 장난스러운",
       "scene": "practice_room",
-      "gaze": "side_playful",
+      "gaze": "look_side",
       "expression": "playful_grin",
-      "outfit": "striped_rugby",
+      "outfit": "striped_rugby_shirt",
       "camera": "waist_up",
-      "atmosphere": "idol_casual"
+      "atmosphere": "idol_casual_snapshot"
     },
     {
       "id": "F-003",
-      "label": "연습실 · 민소매캐주얼 · 위를보며 · 밝은",
+      "label": "연습실 · 민소매캐주얼 · 눈맞춤 · 밝은",
       "scene": "practice_room",
-      "gaze": "up_dreamy",
+      "gaze": "eye_contact",
       "expression": "cheerful",
       "outfit": "sleeveless_casual",
       "camera": "medium_chest",
-      "atmosphere": "idol_casual"
+      "atmosphere": "idol_casual_snapshot"
     },
     {
       "id": "F-004",
@@ -43,29 +43,29 @@
       "scene": "practice_room",
       "gaze": "eye_contact",
       "expression": "embarrassed",
-      "outfit": "hoodie_training",
+      "outfit": "training_hoodie",
       "camera": "high_angle",
-      "atmosphere": "idol_casual"
+      "atmosphere": "idol_casual_snapshot"
     },
     {
       "id": "F-005",
       "label": "연습실 · 바시티자켓 · 살짝아래 · 장난스러운",
       "scene": "practice_room",
-      "gaze": "downward",
+      "gaze": "look_down",
       "expression": "playful_grin",
       "outfit": "varsity_jacket",
       "camera": "medium_chest",
-      "atmosphere": "idol_casual"
+      "atmosphere": "idol_casual_snapshot"
     },
     {
       "id": "F-006",
-      "label": "연습실 · 럭비폴로 · 위를보며 · 부드러운미소",
+      "label": "연습실 · 럭비폴로 · 살짝아래 · 부드러운미소",
       "scene": "practice_room",
-      "gaze": "up_dreamy",
+      "gaze": "look_down",
       "expression": "gentle_smile",
-      "outfit": "striped_rugby",
+      "outfit": "striped_rugby_shirt",
       "camera": "high_angle",
-      "atmosphere": "idol_casual"
+      "atmosphere": "idol_casual_snapshot"
     }
   ]
 }

@@ -89,13 +89,13 @@
     },
     {
       "id": "G1",
-      "name": "GIRL — 걸크러시 / 강한 눈매 / 블론드 롱",
+      "name": "GIRL — 자신감있는 / 강한 눈매 / 블론드 롱",
       "gender": "여자",
       "ethnicity": "동아시아",
-      "mood": "걸크러시",
+      "mood": "자신감있는",
       "impression": "강한 눈매",
       "hairstyle": "블론드 롱",
-      "note": "걸그룹 걸크러시"
+      "note": "걸그룹 자신감있는"
     },
     {
       "id": "G2",
@@ -149,10 +149,10 @@
     },
     {
       "id": "MIX2",
-      "name": "GIRL MIX — 걸크러시 / 강한 눈매 / 블랙 롱 (동남아)",
+      "name": "GIRL MIX — 자신감있는 / 강한 눈매 / 블랙 롱 (동남아)",
       "gender": "여자",
       "ethnicity": "동남아시아",
-      "mood": "걸크러시",
+      "mood": "자신감있는",
       "impression": "강한 눈매",
       "hairstyle": "블랙 롱",
       "note": "인종 다양성 — 동남아 여성"

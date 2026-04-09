@@ -4,87 +4,87 @@
     "prompt_file": "school_prompt.py",
     "description": "school 콘텐츠 프롬프트 실험용 조합 세트",
     "total_combinations": 8,
-    "note": "scene: classroom/hallway/stairway/rooftop/convenience_store | gaze: down_smile/side_playful/off_camera/away_shy/soft_contact | expression: soft_smile/amused/shy_smile/bright_eyes/subtle_laugh | outfit: cardigan_shirt/blazer_shirt/cardigan_tee/blazer_tee | camera: closeup_front/closeup_angle/medium_chest/medium_upper/high_angle/side_medium | atmosphere: bright_sticker/fluorescent_doodle/golden_nostalgic/overcast_relaxed"
+    "note": "scene: classroom/hallway/stairway/rooftop/convenience_store | gaze: look_down/look_side/look_off_camera/look_away/eye_contact | expression: soft_smile/amused/shy_smile/bright_eyed/subtle_laugh | outfit: cardigan_uniform_shirt/blazer_uniform_shirt/cardigan_casual_tee/blazer_casual_tee | camera: front_closeup/angled_closeup/medium_chest/upper_body_medium/high_angle/side_angle_medium | atmosphere: daylight_playful_sticker/fluorescent_drowsy/golden_hour_nostalgic/overcast_relaxed"
   },
   "combinations": [
     {
       "id": "S-001",
       "label": "교실 · 카디건+셔츠 · 쉬는시간",
       "scene": "classroom",
-      "gaze": "down_smile",
+      "gaze": "look_down",
       "expression": "soft_smile",
-      "outfit": "cardigan_shirt",
+      "outfit": "cardigan_uniform_shirt",
       "camera": "medium_chest",
-      "atmosphere": "bright_sticker"
+      "atmosphere": "daylight_playful_sticker"
     },
     {
       "id": "S-002",
       "label": "복도 · 블레이저+셔츠 · 장난기",
       "scene": "hallway",
-      "gaze": "side_playful",
+      "gaze": "look_side",
       "expression": "amused",
-      "outfit": "blazer_shirt",
-      "camera": "closeup_angle",
-      "atmosphere": "fluorescent_doodle"
+      "outfit": "blazer_uniform_shirt",
+      "camera": "angled_closeup",
+      "atmosphere": "fluorescent_drowsy"
     },
     {
       "id": "S-003",
       "label": "계단 · 카디건+티셔츠 · 수줍은 미소",
       "scene": "stairway",
-      "gaze": "away_shy",
+      "gaze": "look_away",
       "expression": "shy_smile",
-      "outfit": "cardigan_tee",
-      "camera": "medium_upper",
-      "atmosphere": "golden_nostalgic"
+      "outfit": "cardigan_casual_tee",
+      "camera": "upper_body_medium",
+      "atmosphere": "golden_hour_nostalgic"
     },
     {
       "id": "S-004",
       "label": "옥상 · 블레이저+티셔츠 · 편안한 오후",
       "scene": "rooftop",
-      "gaze": "off_camera",
-      "expression": "bright_eyes",
-      "outfit": "blazer_tee",
-      "camera": "side_medium",
+      "gaze": "look_off_camera",
+      "expression": "bright_eyed",
+      "outfit": "blazer_casual_tee",
+      "camera": "side_angle_medium",
       "atmosphere": "overcast_relaxed"
     },
     {
       "id": "S-005",
       "label": "편의점 · 카디건+셔츠 · 음료 한 잔",
       "scene": "convenience_store",
-      "gaze": "soft_contact",
+      "gaze": "eye_contact",
       "expression": "subtle_laugh",
-      "outfit": "cardigan_shirt",
-      "camera": "closeup_front",
-      "atmosphere": "bright_sticker"
+      "outfit": "cardigan_uniform_shirt",
+      "camera": "front_closeup",
+      "atmosphere": "daylight_playful_sticker"
     },
     {
       "id": "S-006",
       "label": "교실 · 블레이저+티셔츠 · 졸린 오후",
       "scene": "classroom",
-      "gaze": "off_camera",
+      "gaze": "look_off_camera",
       "expression": "amused",
-      "outfit": "blazer_tee",
+      "outfit": "blazer_casual_tee",
       "camera": "high_angle",
-      "atmosphere": "fluorescent_doodle"
+      "atmosphere": "fluorescent_drowsy"
     },
     {
       "id": "S-007",
       "label": "복도 · 카디건+티셔츠 · 노을빛",
       "scene": "hallway",
-      "gaze": "down_smile",
-      "expression": "bright_eyes",
-      "outfit": "cardigan_tee",
+      "gaze": "look_down",
+      "expression": "bright_eyed",
+      "outfit": "cardigan_casual_tee",
       "camera": "medium_chest",
-      "atmosphere": "golden_nostalgic"
+      "atmosphere": "golden_hour_nostalgic"
     },
     {
       "id": "S-008",
       "label": "계단 · 블레이저+셔츠 · 하교길",
       "scene": "stairway",
-      "gaze": "side_playful",
+      "gaze": "look_side",
       "expression": "soft_smile",
-      "outfit": "blazer_shirt",
-      "camera": "side_medium",
+      "outfit": "blazer_uniform_shirt",
+      "camera": "side_angle_medium",
       "atmosphere": "overcast_relaxed"
     }
   ]

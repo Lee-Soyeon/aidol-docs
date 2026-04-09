@@ -25,7 +25,7 @@
 ### 블록③ User Selection (가변)
 ```python
 # casting_variable_blocks.json에서 한국어 UI 값 → 영어 매핑
-block_3 = f"{ethnicity_en} {gender}, {mood_en}, {impression_en}, {hairstyle_en}."
+block_3 = f"Stunningly beautiful {gender_en} {ethnicity_en} person, {mood_en}, {impression_en}, {hairstyle_en}, idol-tier visual."
 ```
 
 ### 블록④ Quality (고정)
@@ -54,7 +54,6 @@ else:
 | ------ | --------------- |
 | 동아시아   | East Asian      |
 | 동남아시아  | Southeast Asian |
-| 라틴계    | Latin American  |
 | 혼혈     | Mixed ethnicity |
 | 유럽     | European        |
 | 남미     | South American  |
@@ -72,9 +71,9 @@ else:
 | ------ | ----------------------- |
 | 시크     | chic and charismatic    |
 | 청량     | refreshing and youthful |
-| 걸크러시   | confident woman         |
+| 자신감있는  | confident               |
 | 청순     | innocent and pure       |
-| 다크     | dark                    |
+| 다크     | dark and mysterious     |
 | 큐트     | cute                    |
 | 중성적    | androgynous             |
 

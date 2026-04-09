@@ -19,7 +19,9 @@ Frame the shot so the upper body including chest and shoulders is visible.
 Prioritize natural human scale over stylized or exaggerated proportions.
 Both eyes must be anatomically correct and natural-looking — symmetrical eye shape, proper iris placement, natural eyelid coverage, and consistent pupil size. Both eyes must have the exact same iris color as the reference image. No crossed eyes, misaligned irises, distorted eye shapes, or heterochromia.
 Both arms must be fully visible and anatomically complete — no missing, truncated, or merged limbs. Each arm should have a natural, clearly separated form from shoulder to hand.
-Each hand must have exactly five fingers with correct hand anatomy — proper thumb placement, natural finger joints, and proportional hand size relative to the body. No extra digits, no fused fingers, no duplicate hands.
+The total number of hands visible in the image must never exceed two. No duplicate, phantom, or partial extra hands anywhere in the frame — not at the waist, behind the body, or at the edges. Each visible hand must have exactly five fingers with correct hand anatomy — proper thumb placement, natural finger joints, and proportional hand size relative to the body. No extra digits, no fused fingers. Fingers must not appear bent at impossible angles, overlapping unnaturally, or melting into held objects.
+The subject must be the only person in the frame — no other people, silhouettes, or partial figures visible in the background.
+Both feet must appear grounded on a solid surface — no floating, hovering, or ambiguous foot placement.
 Do not place shelves, furniture, or any objects immediately next to the subject that obstruct or clutter the frame edges."""
 
 

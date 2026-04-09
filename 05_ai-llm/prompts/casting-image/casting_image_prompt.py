@@ -4,11 +4,12 @@ BLOCK_FOLLOW_REF = """Maintain the same facial structure, skin tone, eye shape, 
 
 # ── Block ④ Quality (고정) ──
 # 바이럴 프롬프트 기반 (MeiGen nanobanana-trending-prompts 참고)
-BLOCK_QUALITY_VISUAL = """Photorealistic K-pop trainee profile photo.
-Captivating idol face with refined features.
-Smooth radiant skin, natural texture, subtle idol makeup, age 18."""
+BLOCK_QUALITY_VISUAL = """Photorealistic K-pop idol casting photo, editorial beauty photography.
+Stunningly attractive, extremely photogenic face with perfect facial symmetry.
+Harmonious golden-ratio proportions.
+Flawless luminous dewy skin with subtle natural texture, healthy radiant glow, even skin tone, age 18."""
 
-BLOCK_QUALITY_FRAMING = """Professional headshot, tight ID photo crop, face centered in upper two-thirds of frame.
+BLOCK_QUALITY_FRAMING = """Professional headshot, tight ID photo crop, face fills the frame, face centered in upper two-thirds of frame.
 Front-facing, eyes at camera.
 White crew-neck t-shirt."""
 
@@ -16,10 +17,10 @@ White crew-neck t-shirt."""
 BLOCK_QUALITY_BACKDROP = """Seamless white paper studio backdrop.
 Single solid color only, no gradient, no objects, no walls, no windows, no environment."""
 
-BLOCK_QUALITY_LIGHTING = """Soft studio lighting, pure white light.
+BLOCK_QUALITY_LIGHTING = """Soft butterfly lighting with gentle fill light, pure white light.
 Symmetrical even illumination, soft shadow under chin only."""
 
-BLOCK_QUALITY_CAMERA = """85mm f/1.8, sharp focus."""
+BLOCK_QUALITY_CAMERA = """Shot on Canon EOS R5, 85mm f/1.4, ultra-sharp focus on eyes, 4K resolution."""
 
 BLOCK_CONSTRAINTS = """Do NOT change the specified gender.
 Do NOT add glasses, accessories, earrings, or piercings.
@@ -41,4 +42,4 @@ CASTING_SYSTEM_PROMPT = f"""{BLOCK_QUALITY_VISUAL}
 
 # ── 가변 블록 템플릿 ──
 # build_prompt()에서 한국어 UI 값 → 영어 프롬프트 값으로 매핑 후 주입
-VARIABLE_BLOCK_TEMPLATE = "{gender} {ethnicity} person, {mood}, {impression}, {hairstyle}."
+VARIABLE_BLOCK_TEMPLATE = "Stunningly beautiful {gender} {ethnicity} person, {mood}, {impression}, {hairstyle}, idol-tier visual."

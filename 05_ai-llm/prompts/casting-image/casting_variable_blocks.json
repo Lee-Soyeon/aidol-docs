@@ -10,7 +10,6 @@
     "ethnicity": {
       "동아시아": "East Asian",
       "동남아시아": "Southeast Asian",
-      "라틴계": "Latin American",
       "혼혈": "Mixed ethnicity",
       "유럽": "European",
       "남미": "South American"
@@ -22,9 +21,9 @@
     "mood": {
       "시크": "chic and charismatic",
       "청량": "refreshing and youthful",
-      "걸크러시": "confident woman",
+      "자신감있는": "confident",
       "청순": "innocent and pure",
-      "다크": "dark",
+      "다크": "dark and mysterious",
       "큐트": "cute",
       "중성적": "androgynous"
     },
