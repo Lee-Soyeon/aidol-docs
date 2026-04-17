@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "prompt_type": "full_body",
+    "prompt_file": "fullbody_prompt.py",
+    "description": "전신 스튜디오 화보 프롬프트 실험용 조합 세트",
+    "total_combinations": 12,
+    "note": "모든 가변블록이 최소 1회 이상 선택됨"
+  },
+  "combinations": [
+    {
+      "id": "FB01",
+      "label": "스탠딩 · 정면시선 · 진지 · 화이트티 · 아이레벨 · 스튜디오에디토리얼",
+      "scene": "studio_standing",
+      "gaze": "straight_ahead",
+      "expression": "neutral_serious",
+      "outfit": "white_tee",
+      "camera": "eye_level_full",
+      "atmosphere": "studio_editorial"
+    },
+    {
+      "id": "FB02",
+      "label": "시티드 · 오프카메라 · 소프트 · 블랙터틀넥 · 아이레벨 · 스튜디오웜",
+      "scene": "studio_seated",
+      "gaze": "off_camera",
+      "expression": "soft_gaze",
+      "outfit": "black_turtleneck",
+      "camera": "eye_level_full",
+      "atmosphere": "studio_warm"
+    },
+    {
+      "id": "FB03",
+      "label": "스탠딩 · 아래시선 · 멜랑콜리 · 크림티 · 로우앵글 · 소프트피치",
+      "scene": "studio_standing",
+      "gaze": "slight_down",
+      "expression": "melancholic",
+      "outfit": "cream_tee",
+      "camera": "low_angle_full",
+      "atmosphere": "soft_peach"
+    },
+    {
+      "id": "FB04",
+      "label": "시티드 · 위시선 · 자신감미소 · 버건디터틀넥 · 아이레벨 · 소프트피치",
+      "scene": "studio_seated",
+      "gaze": "upward",
+      "expression": "confident_smile",
+      "outfit": "burgundy_turtleneck",
+      "camera": "eye_level_full",
+      "atmosphere": "soft_peach"
+    },
+    {
+      "id": "FB05",
+      "label": "스탠딩 · 아래시선 · 장난스러운 · 화이트티 · 아이레벨 · 스튜디오다크",
+      "scene": "studio_standing",
+      "gaze": "slight_down",
+      "expression": "playful",
+      "outfit": "white_tee",
+      "camera": "eye_level_full",
+      "atmosphere": "studio_dark"
+    },
+    {
+      "id": "FB06",
+      "label": "스탠딩 · 정면시선 · 몽환 · 더스티핑크티 · 로우앵글 · 스튜디오에디토리얼",
+      "scene": "studio_standing",
+      "gaze": "straight_ahead",
+      "expression": "dreamy",
+      "outfit": "dusty_pink_tee",
+      "camera": "low_angle_full",
+      "atmosphere": "studio_editorial"
+    },
+    {
+      "id": "FB07",
+      "label": "시티드 · 오프카메라 · 진지 · 네이비터틀넥 · 아이레벨 · 스튜디오웜",
+      "scene": "studio_seated",
+      "gaze": "off_camera",
+      "expression": "neutral_serious",
+      "outfit": "navy_turtleneck",
+      "camera": "eye_level_full",
+      "atmosphere": "studio_warm"
+    },
+    {
+      "id": "FB09",
+      "label": "시티드 · 정면시선 · 장난스러운 · 스카이블루티 · 로우앵글 · 스튜디오에디토리얼",
+      "scene": "studio_seated",
+      "gaze": "straight_ahead",
+      "expression": "playful",
+      "outfit": "sky_blue_tee",
+      "camera": "low_angle_full",
+      "atmosphere": "studio_editorial"
+    },
+    {
+      "id": "FB10",
+      "label": "스탠딩 · 위시선 · 멜랑콜리 · 아이보리터틀넥 · 아이레벨 · 소프트피치",
+      "scene": "studio_standing",
+      "gaze": "upward",
+      "expression": "melancholic",
+      "outfit": "ivory_turtleneck",
+      "camera": "eye_level_full",
+      "atmosphere": "soft_peach"
+    },
+    {
+      "id": "FB11",
+      "label": "스탠딩 · 오프카메라 · 몽환 · 카멜터틀넥 · 로우앵글 · 스튜디오웜",
+      "scene": "studio_standing",
+      "gaze": "off_camera",
+      "expression": "dreamy",
+      "outfit": "camel_turtleneck",
+      "camera": "low_angle_full",
+      "atmosphere": "studio_warm"
+    },
+    {
+      "id": "FB12",
+      "label": "시티드 · 위시선 · 자신감미소 · 포레스트그린터틀넥 · 아이레벨 · 스튜디오웜",
+      "scene": "studio_seated",
+      "gaze": "upward",
+      "expression": "confident_smile",
+      "outfit": "forest_green_turtleneck",
+      "camera": "eye_level_full",
+      "atmosphere": "studio_warm"
+    },
+    {
+      "id": "FB13",
+      "label": "스탠딩 · 정면시선 · 소프트 · 네이비티 · 로우앵글 · 스튜디오다크",
+      "scene": "studio_standing",
+      "gaze": "straight_ahead",
+      "expression": "soft_gaze",
+      "outfit": "navy_tee",
+      "camera": "low_angle_full",
+      "atmosphere": "studio_dark"
+    }
+  ]
+}

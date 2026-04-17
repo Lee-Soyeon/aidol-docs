@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "prompt_type": "side_profile",
+    "prompt_file": "side_prompt.py",
+    "description": "측면 프로필 스튜디오 화보 프롬프트 실험용 조합 세트",
+    "total_combinations": 11,
+    "note": "모든 가변블록이 최소 1회 이상 선택됨"
+  },
+  "combinations": [
+    {
+      "id": "SP01",
+      "label": "우측프로필 · 정면시선 · 차분 · 화이트티 · 타이트 · 무디에디토리얼",
+      "scene": "profile_right",
+      "gaze": "forward_past_camera",
+      "expression": "neutral_still",
+      "outfit": "white_tee",
+      "camera": "tight_profile",
+      "atmosphere": "moody_editorial"
+    },
+    {
+      "id": "SP02",
+      "label": "좌측프로필 · 아래시선 · 멜랑콜리 · 블랙터틀넥 · 미디엄 · 드라마틱사이드",
+      "scene": "profile_left",
+      "gaze": "slight_down",
+      "expression": "melancholic",
+      "outfit": "black_turtleneck",
+      "camera": "medium_profile",
+      "atmosphere": "dramatic_side_lit"
+    },
+    {
+      "id": "SP03",
+      "label": "우측쓰리쿼터 · 어깨너머 · 에디토리얼 · 버건디터틀넥 · 타이트 · 클린미니멀",
+      "scene": "three_quarter_right",
+      "gaze": "over_shoulder",
+      "expression": "sharp_editorial",
+      "outfit": "burgundy_turtleneck",
+      "camera": "tight_profile",
+      "atmosphere": "clean_minimal"
+    },
+    {
+      "id": "SP06",
+      "label": "좌측프로필 · 정면시선 · 장난스러운 · 스카이블루티 · 미디엄 · 뮤트세이지",
+      "scene": "profile_left",
+      "gaze": "forward_past_camera",
+      "expression": "playful",
+      "outfit": "navy_tee",
+      "camera": "medium_profile",
+      "atmosphere": "clean_minimal"
+    },
+    {
+      "id": "SP08",
+      "label": "좌측쓰리쿼터 · 어깨너머 · 차분 · 네이비터틀넥 · 미디엄 · 드라마틱사이드",
+      "scene": "three_quarter_left",
+      "gaze": "over_shoulder",
+      "expression": "neutral_still",
+      "outfit": "navy_turtleneck",
+      "camera": "medium_profile",
+      "atmosphere": "dramatic_side_lit"
+    },
+    {
+      "id": "SP09",
+      "label": "우측프로필 · 위시선 · 자신감미소 · 크림티 · 타이트 · 뮤트세이지",
+      "scene": "profile_right",
+      "gaze": "upward",
+      "expression": "confident_smile",
+      "outfit": "cream_tee",
+      "camera": "tight_profile",
+      "atmosphere": "clean_minimal"
+    },
+    {
+      "id": "SP10",
+      "label": "좌측프로필 · 눈감기 · 취약 · 아이보리터틀넥 · 미디엄 · 무디에디토리얼",
+      "scene": "profile_left",
+      "gaze": "closed_eyes",
+      "expression": "vulnerable",
+      "outfit": "ivory_turtleneck",
+      "camera": "medium_profile",
+      "atmosphere": "moody_editorial"
+    },
+    {
+      "id": "SP11",
+      "label": "우측쓰리쿼터 · 정면시선 · 몽환 · 카멜터틀넥 · 타이트 · 무디에디토리얼",
+      "scene": "three_quarter_right",
+      "gaze": "forward_past_camera",
+      "expression": "dreamy",
+      "outfit": "camel_turtleneck",
+      "camera": "tight_profile",
+      "atmosphere": "moody_editorial"
+    },
+    {
+      "id": "SP12",
+      "label": "좌측쓰리쿼터 · 아래시선 · 에디토리얼 · 포레스트그린터틀넥 · 미디엄 · 클린미니멀",
+      "scene": "three_quarter_left",
+      "gaze": "slight_down",
+      "expression": "sharp_editorial",
+      "outfit": "forest_green_turtleneck",
+      "camera": "medium_profile",
+      "atmosphere": "clean_minimal"
+    },
+    {
+      "id": "SP14",
+      "label": "우측쓰리쿼터 · 어깨너머 · 에디토리얼 · 블랙터틀넥 · 타이트 · 다크차콜",
+      "scene": "three_quarter_right",
+      "gaze": "over_shoulder",
+      "expression": "sharp_editorial",
+      "outfit": "black_turtleneck",
+      "camera": "tight_profile",
+      "atmosphere": "dark_charcoal"
+    },
+    {
+      "id": "SP15",
+      "label": "우측프로필 · 눈감기 · 취약 · 크림티 · 타이트 · 웜피치",
+      "scene": "profile_right",
+      "gaze": "closed_eyes",
+      "expression": "vulnerable",
+      "outfit": "cream_tee",
+      "camera": "tight_profile",
+      "atmosphere": "warm_peach"
+    }
+  ]
+}
