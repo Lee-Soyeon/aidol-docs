@@ -28,9 +28,10 @@ erDiagram
     companions ||--o{ companion_relationships : "forms (to)"
     practices ||--o| collectibles : "creates collectible"
     practices ||--o{ practice_credits : "linked credit entries"
-    credits ||--|| practice_credits : "consume/refund subtype (JTI)"
-    collectibles ||--o| photocard_collectibles : "photocard subtype"
-    collectibles ||--o| shot_collectibles : "shot subtype"
+    credits ||--o| practice_credits : "consume/refund subtype (JTI)"
+    credits |o--o{ practice_credits : "refund origin (refund_of_credit_id)"
+    collectibles ||--o| photocard_collectibles : "joined subtype (photocard)"
+    collectibles ||--o| shot_collectibles : "joined subtype (shot)"
 
     aidols {
         string id PK
@@ -122,6 +123,7 @@ erDiagram
     practice_credits {
         string id PK, FK
         string practice_id FK "NOT NULL, IX"
+        string refund_of_credit_id FK "NULLABLE, credits.id"
     }
 
     chatrooms {
@@ -206,10 +208,10 @@ erDiagram
 | `aidol_feeds`             | 피드 콘텐츠              | 4      |
 | `credits`                 | 크레딧 원장 base (JTI)   | 5      |
 | `practices`               | 연습 결과 base           | 6      |
-| `collectibles`            | 연습 산출물 공통 메타    | 6      |
-| `photocard_collectibles`  | 포토카드 산출물 subtype  | 6      |
-| `shot_collectibles`       | 샷 산출물 subtype        | 6      |
-| `practice_credits`        | 연습 소비/환불 subtype   | 6      |
+| `collectibles`            | 연습 산출물 base (JTI)            | 6      |
+| `photocard_collectibles`  | 포토카드 joined subtype           | 6      |
+| `shot_collectibles`       | 샷 joined subtype                 | 6      |
+| `practice_credits`        | 연습 소비/환불 subtype + refund link | 6      |
 
 ---
 
@@ -230,9 +232,10 @@ erDiagram
 | chatrooms → messages                  | 1:N (채팅방당 여러 메시지)                   |
 | practices → collectibles              | 1:0..1 (하나의 연습은 최대 하나의 산출물 생성) |
 | practices → practice_credits          | 1:N (하나의 practice에 연결된 credit entry)  |
-| credits → practice_credits            | 1:1 (consume/refund subtype only, JTI)       |
-| collectibles → photocard_collectibles | 1:0..1 (포토카드 산출물 상세)                |
-| collectibles → shot_collectibles      | 1:0..1 (샷 산출물 상세)                      |
+| credits → practice_credits            | 1:0..1 (id PK/FK 기반 consume/refund subtype, JTI) |
+| credits → practice_credits (`refund_of_credit_id`) | 0..1:0..N (nullable refund origin reference) |
+| collectibles → photocard_collectibles | 1:0..1 (포토카드 joined subtype)            |
+| collectibles → shot_collectibles      | 1:0..1 (샷 joined subtype)                  |
 
 ---
 
@@ -329,6 +332,8 @@ erDiagram
   - 이 경우 NULL은 값 미정이 아니라, 해당 타입에 비적용인 스탯을 의미합니다.
   - 예: 현재 `SHOT`의 `charm_delta`는 `COMPLETED` 상태에서도 NULL 입니다.
   - 실패한 Practice는 기록으로 남고, Collectible은 생성되지 않습니다.
+  - 무료 크레딧으로 실패한 Practice는 `practice_credits` row를 생성하지 않으며, 다음 시도에서 무료 잔여량이 다시 계산됩니다.
+  - 유료 크레딧으로 실패한 Practice는 ledger 상 "차감 없음"이 아니라 `CONSUME + REFUND` pair로 기록되며, refund link는 `practice_credits.refund_of_credit_id`로 원본 consume을 참조합니다.
   - AI 생성 또는 완료 처리 실패 시 Practice는 삭제되지 않고 `FAILED` 상태로 유지됩니다.
   - 이후 연습 타입이 추가되면 해당 타입 전용 Collectible subtype을 추가하는 방식으로 확장할 수 있습니다.
 
@@ -347,9 +352,11 @@ erDiagram
 | created_at    | datetime | NOT NULL         | 생성 시간                                |
 
 참고
-  - `collectibles`는 완료된 Practice 산출물만 저장합니다.
+  - `collectibles`는 완료된 Practice 산출물만 저장하는 Collectible base table입니다.
   - 삭제해도 해당 Practice로 획득한 스탯은 유지됩니다.
-  - `collectibles.type`은 산출물 subtype 구분 및 조회 필터링을 위한 컬럼이며, linked `practices.type`과 동일해야 합니다.
+  - `collectibles.type`은 subtype discriminator이며, linked `practices.type`과 동일해야 합니다.
+  - ORM은 `collectibles.type` 값에 따라 `PhotocardCollectible` 또는 `ShotCollectible` joined subtype으로 해석합니다.
+  - 따라서 `photocard_collectibles`, `shot_collectibles`는 단순 detail table/composition이 아니라 `collectibles`를 상속하는 joined-table subtype 입니다.
   - `variant`, `mode`, `result_grade`, `stat_delta`의 정본은 `practices`를 참조합니다.
   - 실제 미디어 URL과 `serial_number`는 공통 테이블이 아니라 도메인 subtype 테이블에 저장합니다.
   - 각 `collectible`에는 `collectibles.type`에 대응하는 subtype row가 정확히 하나 존재하며, 이 제약은 mermaid ERD에 직접 표현되지 않습니다.
@@ -367,7 +374,8 @@ erDiagram
 | serial_number | str  | UNIQUE | 포토카드 시리얼 번호     |
 
 참고
-  - `PHOTOCARD` 타입 산출물을 저장합니다.
+  - `PHOTOCARD` 타입 joined subtype row입니다.
+  - `collectible_id`는 subtype PK이면서 동시에 `collectibles.id`를 참조하는 FK입니다.
 
 인덱스
   - 없음
@@ -381,7 +389,8 @@ erDiagram
 | serial_number | str  | UNIQUE | 샷 시리얼 번호       |
 
 참고
-  - `SHOT` 타입 산출물을 저장합니다.
+  - `SHOT` 타입 joined subtype row입니다.
+  - `collectible_id`는 subtype PK이면서 동시에 `collectibles.id`를 참조하는 FK입니다.
 
 인덱스
   - 없음
@@ -413,15 +422,23 @@ erDiagram
 
 ### practice_credits
 
-| 필드       | 타입 | 제약             | 설명               |
-| ---------- | ---- | ---------------- | ------------------ |
-| id         | UUID | PK, FK           | credits.id 참조    |
-| practice_id | UUID | FK, IX, NOT NULL | practices.id 참조  |
+| 필드               | 타입 | 제약             | 설명                                  |
+| ------------------ | ---- | ---------------- | ------------------------------------- |
+| id                 | UUID | PK, FK           | credits.id 참조                       |
+| practice_id        | UUID | FK, IX, NOT NULL | practices.id 참조                     |
+| refund_of_credit_id | UUID | FK, NULLABLE     | refund 시 되돌리는 원본 `credits.id` |
 
 참고
-  - `practice_credits`는 `CONSUME`, `REFUND` 엔트리에만 존재합니다.
+  - `practice_credits`는 `credits`의 `CONSUME`, `REFUND` 엔트리에만 존재하는 subtype(JTI)입니다.
+  - `id`는 `credits.id`의 PK이자 FK로, 해당 `practice_credits` row가 상속하는 credit entry 자체를 의미합니다.
+  - `practice_credits.refund_of_credit_id`는 refund credit가 어떤 원본 consume credit를 되돌리는지 추적하기 위한 nullable self-reference FK 입니다.
+  - `CONSUME` row는 `refund_of_credit_id = NULL` 입니다.
+  - `REFUND` row는 `refund_of_credit_id = 원본 CONSUME credit id` 입니다.
+  - legacy migrated 데이터는 `refund_of_credit_id = NULL` 입니다.
   - 무료 크레딧 사용 Practice는 `practice_credits`가 생성되지 않습니다.
-  - 유료 크레딧 사용 Practice가 실패하면, 동일 Practice에 연결된 `CONSUME` 이후 `REFUND` 엔트리가 추가될 수 있습니다.
+  - 무료 크레딧 실패 시에도 `practice_credits` row를 생성하지 않으며, 무료 잔여량은 `practices.status = COMPLETED` 이고 `practice_credits`가 없는 practice 기준으로 다음 시도에서 다시 계산됩니다.
+  - 유료 크레딧 실패 시 ledger에는 `CONSUME` 후 `REFUND`가 별도 entry로 남습니다. 사용자 잔액은 원복되지만 audit trail을 위해 두 entry를 모두 유지합니다.
+  - 이때 refund row의 `practice_credits.refund_of_credit_id`가 원본 consume row를 가리킵니다.
   - 하나의 Practice에는 `CONSUME`, `REFUND`가 모두 연결될 수 있으므로 `practice_id`는 UNIQUE가 아닙니다.
 
 인덱스
